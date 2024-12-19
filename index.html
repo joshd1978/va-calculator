@@ -157,13 +157,14 @@
             font-weight: bold;
         }
 
-        .smc-notice {
+        .additional-benefits-notice {
             margin-top: 1rem;
-            padding: 1rem;
+            padding: 1.2rem;
             background-color: #fff3cd;
             border-left: 4px solid #dc3545;
             border-radius: 4px;
             font-size: 0.9rem;
+            line-height: 1.5;
             color: #666;
             display: none;
         }
@@ -304,8 +305,8 @@
         <div class="difference" id="difference-amount">
             Monthly Increase: $0.00
         </div>
-        <div class="smc-notice" id="smc-notice">
-            Disability ratings over 100% may qualify for special compensation in limited circumstances, such as eligibility for Special Monthly Compensation (SMC) when additional severe disabilities or unique circumstances exist.
+        <div class="additional-benefits-notice" id="additional-benefits-notice">
+            You may be eligible for Total Disability Individual Unemployability (<strong>TDIU</strong>) if your service-connected disabilities prevent you from securing or maintaining substantially gainful employment, and in certain cases, disability ratings over 100% may qualify for additional compensation like Special Monthly Compensation (<strong>SMC</strong>) for severe disabilities or unique circumstances—contact Veteran Help today for a free consultation to explore your eligibility.
         </div>
         <div class="consultation-section">
             <p class="disclaimer">*This is only an estimate. Every veteran's situation is unique and may qualify for different rates and benefits.</p>
@@ -491,16 +492,16 @@
                     `$${newBenefits.total.toFixed(2)}`;
                 
                 const differenceElement = document.getElementById('difference-amount');
-                const smcNotice = document.getElementById('smc-notice');
+                const benefitsNotice = document.getElementById('additional-benefits-notice');
 
                 differenceElement.textContent = `Monthly Increase: $${difference.toFixed(2)}`;
 
                 if (currentRating === 100) {
                     differenceElement.classList.add('warning-text');
-                    smcNotice.style.display = 'block';
+                    benefitsNotice.style.display = 'block';
                 } else {
                     differenceElement.classList.remove('warning-text');
-                    smcNotice.style.display = 'none';
+                    benefitsNotice.style.display = 'none';
                 }
 
                 // Update breakdowns
