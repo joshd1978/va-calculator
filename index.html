@@ -10,7 +10,6 @@
 <!-- Start of calculator -->
 <div id="va-calculator">
     <style>
-        /* First code block's CSS goes here */
         #va-calculator {
             max-width: 1200px;
             margin: 2rem auto;
@@ -174,6 +173,34 @@
             display: none;
         }
 
+        .consultation-section {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .disclaimer {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+
+        .consultation-button {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .consultation-button:hover {
+            background-color: #218838;
+        }
+
         @media (max-width: 768px) {
             #va-calculator {
                 padding: 1rem;
@@ -189,7 +216,7 @@
         }
     </style>
 
-    <h2>VA Estimated Benefits Calculator 2025</h2>
+    <h2>VA Disability Benefits Calculator 2024</h2>
     
     <div class="calculator-grid">
         <div class="calculator-section">
@@ -261,10 +288,15 @@
         <div class="difference" id="difference-amount">
             Monthly Increase: $0.00
         </div>
+        <div class="consultation-section">
+            <p class="disclaimer">*This is only an estimate. Every veteran's situation is unique and may qualify for different rates and benefits.</p>
+            <a href="https://veteranhelp.com/contact" class="consultation-button" target="_blank">
+                Get Your Free Consultation
+            </a>
+        </div>
     </div>
 
     <script>
-        // Second code block's JavaScript goes here
         document.addEventListener('DOMContentLoaded', function() {
             // 2024 Base Rates without dependents
             const baseRates = {
