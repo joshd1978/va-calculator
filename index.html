@@ -152,6 +152,22 @@
             font-size: 1.2rem;
         }
 
+        .warning-text {
+            color: #dc3545 !important;
+            font-weight: bold;
+        }
+
+        .smc-notice {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #fff3cd;
+            border-left: 4px solid #dc3545;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: #666;
+            display: none;
+        }
+
         .combined-rating {
             text-align: center;
             font-size: 1.4rem;
@@ -287,6 +303,9 @@
         </div>
         <div class="difference" id="difference-amount">
             Monthly Increase: $0.00
+        </div>
+        <div class="smc-notice" id="smc-notice">
+            Disability ratings over 100% may qualify for special compensation in limited circumstances, such as eligibility for Special Monthly Compensation (SMC) when additional severe disabilities or unique circumstances exist.
         </div>
         <div class="consultation-section">
             <p class="disclaimer">*This is only an estimate. Every veteran's situation is unique and may qualify for different rates and benefits.</p>
@@ -470,8 +489,19 @@
                     `$${currentBenefits.total.toFixed(2)}`;
                 document.getElementById('new-amount').textContent = 
                     `$${newBenefits.total.toFixed(2)}`;
-                document.getElementById('difference-amount').textContent = 
-                    `Monthly Increase: $${difference.toFixed(2)}`;
+                
+                const differenceElement = document.getElementById('difference-amount');
+                const smcNotice = document.getElementById('smc-notice');
+
+                differenceElement.textContent = `Monthly Increase: $${difference.toFixed(2)}`;
+
+                if (currentRating === 100) {
+                    differenceElement.classList.add('warning-text');
+                    smcNotice.style.display = 'block';
+                } else {
+                    differenceElement.classList.remove('warning-text');
+                    smcNotice.style.display = 'none';
+                }
 
                 // Update breakdowns
                 document.getElementById('current-breakdown').innerHTML = 
