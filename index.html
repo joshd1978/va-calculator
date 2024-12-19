@@ -169,6 +169,18 @@
             display: none;
         }
 
+        .tdiu-eligibility-notice {
+            margin-top: 1rem;
+            padding: 1.2rem;
+            background-color: #fff3cd;
+            border-left: 4px solid #28a745;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #666;
+            display: none;
+        }
+
         .combined-rating {
             text-align: center;
             font-size: 1.4rem;
@@ -232,7 +244,6 @@
             }
         }
     </style>
-
     <h2>VA Disability Benefits Calculator 2024</h2>
     
     <div class="calculator-grid">
@@ -305,6 +316,9 @@
         <div class="difference" id="difference-amount">
             Monthly Increase: $0.00
         </div>
+        <div class="tdiu-eligibility-notice" id="tdiu-eligibility-notice">
+            You may be eligible for Total Disability Individual Unemployability (<strong>TDIU</strong>) if your service-connected disabilities prevent you from securing or maintaining substantially gainful employment.
+        </div>
         <div class="additional-benefits-notice" id="additional-benefits-notice">
             You may be eligible for Total Disability Individual Unemployability (<strong>TDIU</strong>) if your service-connected disabilities prevent you from securing or maintaining substantially gainful employment, and in certain cases, disability ratings over 100% may qualify for additional compensation like Special Monthly Compensation (<strong>SMC</strong>) for severe disabilities or unique circumstances—contact Veteran Help today for a free consultation to explore your eligibility.
         </div>
@@ -315,238 +329,3 @@
             </a>
         </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // 2024 Base Rates without dependents
-            const baseRates = {
-                0: 0,
-                10: 175.51,
-                20: 346.95,
-                30: 537.42,
-                40: 774.16,
-                50: 1102.04,
-                60: 1395.93,
-                70: 1759.19,
-                80: 2044.89,
-                90: 2297.96,
-                100: 3831.30
-            };
-
-            // Rates for veterans with spouse only
-            const spouseRates = {
-                30: 601.42,
-                40: 859.16,
-                50: 1208.04,
-                60: 1523.93,
-                70: 1908.19,
-                80: 2214.89,
-                90: 2489.96,
-                100: 4044.91
-            };
-
-            // Additional amounts for Aid & Attendance spouse
-            const spouseAARates = {
-                30: 58.00,
-                40: 78.00,
-                50: 98.00,
-                60: 117.00,
-                70: 137.00,
-                80: 157.00,
-                90: 176.00,
-                100: 195.92
-            };
-
-            // Rates for additional children under 18
-            const childRates = {
-                30: 31.00,
-                40: 42.00,
-                50: 53.00,
-                60: 63.00,
-                70: 74.00,
-                80: 84.00,
-                90: 95.00,
-                100: 106.14
-            };
-
-            // Rates for school children over 18
-            const schoolChildRates = {
-                30: 102.00,
-                40: 137.00,
-                50: 171.00,
-                60: 205.00,
-                70: 239.00,
-                80: 274.00,
-                90: 308.00,
-                100: 342.85
-            };
-
-            // Additional amounts for one parent
-            const oneParentExtra = {
-                30: 51.00,
-                40: 68.00,
-                50: 85.00,
-                60: 102.00,
-                70: 120.00,
-                80: 137.00,
-                90: 154.00,
-                100: 171.44
-            };
-
-            // Additional amounts for two parents
-            const twoParentsExtra = {
-                30: 102.00,
-                40: 136.00,
-                50: 170.00,
-                60: 204.00,
-                70: 240.00,
-                80: 274.00,
-                90: 308.00,
-                100: 342.88
-            };
-
-            function combinedRatingCalculation(rating1, rating2) {
-                if (rating1 === 0) return rating2;
-                if (rating2 === 0) return rating1;
-                
-                // Calculate remaining efficiency and combine
-                const remaining = (100 - rating1) / 100;
-                const combined = rating1 + (rating2 * remaining);
-                
-                // Round to nearest 10
-                return Math.round(combined / 10) * 10;
-            }
-
-            function calculateBenefits(rating) {
-                if (rating === 0) return { total: 0, breakdown: [] };
-
-                const spouseStatus = document.getElementById('spouse-status').value;
-                const childrenUnder18 = parseInt(document.getElementById('children-under-18').value) || 0;
-                const childrenOver18 = parseInt(document.getElementById('children-over-18').value) || 0;
-                const parentStatus = document.getElementById('parent-status').value;
-
-                let total = baseRates[rating];
-                let breakdown = [`Base Rate: $${total.toFixed(2)}`];
-
-                if (rating >= 30) {
-                    // Spouse calculations
-                    if (spouseStatus !== 'none') {
-                        const withSpouse = spouseRates[rating] - baseRates[rating];
-                        total = spouseRates[rating];
-                        breakdown.push(`Spouse: +$${withSpouse.toFixed(2)}`);
-
-                        if (spouseStatus === 'spouse-aa') {
-                            total += spouseAARates[rating];
-                            breakdown.push(`Aid & Attendance for Spouse: +$${spouseAARates[rating].toFixed(2)}`);
-                        }
-                    }
-
-                    // Children calculations
-                    if (childrenUnder18 > 0) {
-                        const childAmount = childRates[rating] * childrenUnder18;
-                        total += childAmount;
-                        breakdown.push(`Children under 18 (${childrenUnder18}): +$${childAmount.toFixed(2)}`);
-                    }
-
-                    if (childrenOver18 > 0) {
-                        const schoolChildAmount = schoolChildRates[rating] * childrenOver18;
-                        total += schoolChildAmount;
-                        breakdown.push(`School Children over 18 (${childrenOver18}): +$${schoolChildAmount.toFixed(2)}`);
-                    }
-
-                    // Parent calculations
-                    if (parentStatus === 'one') {
-                        total += oneParentExtra[rating];
-                        breakdown.push(`One Parent: +$${oneParentExtra[rating].toFixed(2)}`);
-                    } else if (parentStatus === 'two') {
-                        total += twoParentsExtra[rating];
-                        breakdown.push(`Two Parents: +$${twoParentsExtra[rating].toFixed(2)}`);
-                    }
-                }
-
-                return { total, breakdown };
-            }
-
-            function updateCalculator() {
-                const currentRating = parseInt(document.getElementById('va-rating').value);
-                const additionalRating = parseInt(document.getElementById('va-additional-rating').value);
-                const combinedRating = combinedRatingCalculation(currentRating, additionalRating);
-
-                // Update rating displays
-                document.getElementById('va-rating-value').textContent = 
-                    `Current Rating: ${currentRating}%`;
-                document.getElementById('va-additional-rating-value').textContent = 
-                    `Additional Rating: ${additionalRating}%`;
-                document.getElementById('combined-rating').textContent = 
-                    `Combined Rating: ${combinedRating}%`;
-
-                // Calculate benefits
-                const currentBenefits = calculateBenefits(currentRating);
-                const newBenefits = calculateBenefits(combinedRating);
-                const difference = newBenefits.total - currentBenefits.total;
-
-                // Update monetary displays
-                document.getElementById('current-amount').textContent = 
-                    `$${currentBenefits.total.toFixed(2)}`;
-                document.getElementById('new-amount').textContent = 
-                    `$${newBenefits.total.toFixed(2)}`;
-                
-                const differenceElement = document.getElementById('difference-amount');
-                const benefitsNotice = document.getElementById('additional-benefits-notice');
-
-                differenceElement.textContent = `Monthly Increase: $${difference.toFixed(2)}`;
-
-                if (currentRating === 100) {
-                    differenceElement.classList.add('warning-text');
-                    benefitsNotice.style.display = 'block';
-                } else {
-                    differenceElement.classList.remove('warning-text');
-                    benefitsNotice.style.display = 'none';
-                }
-
-                // Update breakdowns
-                document.getElementById('current-breakdown').innerHTML = 
-                    currentBenefits.breakdown.join('<br>');
-                document.getElementById('new-breakdown').innerHTML = 
-                    newBenefits.breakdown.join('<br>');
-
-                // Handle dependent section visibility
-                const dependentOptions = document.getElementById('dependent-options');
-                const dependentsNotice = document.getElementById('dependents-notice');
-                
-                if (combinedRating < 30) {
-                    dependentOptions.classList.add('disabled');
-                    dependentsNotice.style.display = 'block';
-                } else {
-                    dependentOptions.classList.remove('disabled');
-                    dependentsNotice.style.display = 'none';
-                }
-            }
-
-            // Add event listeners to all inputs
-            const elements = [
-                'va-rating', 
-                'va-additional-rating', 
-                'spouse-status', 
-                'children-under-18', 
-                'children-over-18', 
-                'parent-status'
-            ];
-
-            elements.forEach(id => {
-                const element = document.getElementById(id);
-                if (element) {
-                    element.addEventListener('input', updateCalculator);
-                    element.addEventListener('change', updateCalculator);
-                }
-            });
-
-            // Initialize calculator
-            updateCalculator();
-        });
-    </script>
-</div>
-<!-- End of calculator -->
-
-</body>
-</html>
