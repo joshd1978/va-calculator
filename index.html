@@ -1,5 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VA Disability Calculator 2024</title>
+</head>
+<body>
+
+<!-- Start of calculator -->
 <div id="va-calculator">
     <style>
+        /* First code block's CSS goes here */
         #va-calculator {
             max-width: 1200px;
             margin: 2rem auto;
@@ -60,12 +71,34 @@
             pointer-events: none;
         }
 
-        .dependents-notice {
-            font-size: 0.9rem;
-            color: #dc3545;
-            text-align: center;
-            margin-top: 1rem;
-            display: none;
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-group label {
+            flex: 1;
+        }
+
+        .input-group input[type="number"] {
+            width: 80px;
+            padding: 0.3rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .select-group {
+            margin-bottom: 1rem;
+        }
+
+        .select-group select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
         }
 
         .comparison-section {
@@ -83,7 +116,7 @@
         }
 
         .comparison-box {
-            padding: 1rem;
+            padding: 1.5rem;
             border-radius: 8px;
             text-align: center;
         }
@@ -98,8 +131,18 @@
         }
 
         .amount {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: bold;
+            margin: 1rem 0;
+        }
+
+        .breakdown {
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            text-align: left;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
         }
 
         .difference {
@@ -107,14 +150,28 @@
             text-align: center;
             font-weight: bold;
             color: #28a745;
+            font-size: 1.2rem;
         }
 
         .combined-rating {
             text-align: center;
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             font-weight: bold;
-            margin-top: 1rem;
+            margin: 1rem 0;
             color: #1a2f4e;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .notification {
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #856404;
+            background-color: #fff3cd;
+            border-radius: 4px;
+            display: none;
         }
 
         @media (max-width: 768px) {
@@ -132,7 +189,7 @@
         }
     </style>
 
-    <h2>VA Benefits Calculator 2024</h2>
+    <h2>VA Disability Benefits Calculator 2024</h2>
     
     <div class="calculator-grid">
         <div class="calculator-section">
@@ -148,37 +205,57 @@
         </div>
 
         <div class="calculator-section">
-            <h3>Dependents</h3>
+            <h3>Dependent Information</h3>
             <div class="dependent-options" id="dependent-options">
-                <label>
-                    <input type="checkbox" id="va-spouse"> Spouse
-                </label>
-                <label>
-                    <input type="number" id="va-children" min="0" max="10" value="0"> Children under 18
-                </label>
-                <label>
-                    <input type="checkbox" id="va-parents"> Dependent Parents
-                </label>
+                <div class="select-group">
+                    <label for="spouse-status">Spouse Status:</label>
+                    <select id="spouse-status">
+                        <option value="none">No Spouse</option>
+                        <option value="spouse">With Spouse</option>
+                        <option value="spouse-aa">Spouse with Aid & Attendance</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Children under 18:</label>
+                    <input type="number" id="children-under-18" min="0" max="10" value="0">
+                </div>
+
+                <div class="input-group">
+                    <label>School Children (over 18):</label>
+                    <input type="number" id="children-over-18" min="0" max="10" value="0">
+                </div>
+
+                <div class="select-group">
+                    <label for="parent-status">Dependent Parents:</label>
+                    <select id="parent-status">
+                        <option value="none">No Parents</option>
+                        <option value="one">One Parent</option>
+                        <option value="two">Two Parents</option>
+                    </select>
+                </div>
             </div>
-            <p class="dependents-notice" id="dependents-notice">
+            <div class="notification" id="dependents-notice">
                 Dependent benefits only apply to ratings of 30% or higher
-            </p>
+            </div>
         </div>
     </div>
 
+    <div class="combined-rating" id="combined-rating">
+        Combined Rating: 0%
+    </div>
+
     <div class="comparison-section">
-        <div class="combined-rating" id="combined-rating">
-            Combined Rating: 0%
-        </div>
-        
         <div class="comparison-grid">
             <div class="comparison-box current-amount">
                 <h4>Current Monthly Payment</h4>
                 <div id="current-amount" class="amount">$0.00</div>
+                <div id="current-breakdown" class="breakdown"></div>
             </div>
             <div class="comparison-box new-amount">
                 <h4>New Monthly Payment</h4>
                 <div id="new-amount" class="amount">$0.00</div>
+                <div id="new-breakdown" class="breakdown"></div>
             </div>
         </div>
         <div class="difference" id="difference-amount">
@@ -187,7 +264,95 @@
     </div>
 
     <script>
+        // Second code block's JavaScript goes here
         document.addEventListener('DOMContentLoaded', function() {
+            // 2024 Base Rates without dependents
+            const baseRates = {
+                0: 0,
+                10: 175.51,
+                20: 346.95,
+                30: 537.42,
+                40: 774.16,
+                50: 1102.04,
+                60: 1395.93,
+                70: 1759.19,
+                80: 2044.89,
+                90: 2297.96,
+                100: 3831.30
+            };
+
+            // Rates for veterans with spouse only
+            const spouseRates = {
+                30: 601.42,
+                40: 859.16,
+                50: 1208.04,
+                60: 1523.93,
+                70: 1908.19,
+                80: 2214.89,
+                90: 2489.96,
+                100: 4044.91
+            };
+
+            // Additional amounts for Aid & Attendance spouse
+            const spouseAARates = {
+                30: 58.00,
+                40: 78.00,
+                50: 98.00,
+                60: 117.00,
+                70: 137.00,
+                80: 157.00,
+                90: 176.00,
+                100: 195.92
+            };
+
+            // Rates for additional children under 18
+            const childRates = {
+                30: 31.00,
+                40: 42.00,
+                50: 53.00,
+                60: 63.00,
+                70: 74.00,
+                80: 84.00,
+                90: 95.00,
+                100: 106.14
+            };
+
+            // Rates for school children over 18
+            const schoolChildRates = {
+                30: 102.00,
+                40: 137.00,
+                50: 171.00,
+                60: 205.00,
+                70: 239.00,
+                80: 274.00,
+                90: 308.00,
+                100: 342.85
+            };
+
+            // Additional amounts for one parent
+            const oneParentExtra = {
+                30: 51.00,
+                40: 68.00,
+                50: 85.00,
+                60: 102.00,
+                70: 120.00,
+                80: 137.00,
+                90: 154.00,
+                100: 171.44
+            };
+
+            // Additional amounts for two parents
+            const twoParentsExtra = {
+                30: 102.00,
+                40: 136.00,
+                50: 170.00,
+                60: 204.00,
+                70: 240.00,
+                80: 274.00,
+                90: 308.00,
+                100: 342.88
+            };
+
             function combinedRatingCalculation(rating1, rating2) {
                 if (rating1 === 0) return rating2;
                 if (rating2 === 0) return rating1;
@@ -200,85 +365,62 @@
                 return Math.round(combined / 10) * 10;
             }
 
-            const calculateBenefits = (rating) => {
-                const hasSpouse = document.getElementById('va-spouse').checked;
-                const children = parseInt(document.getElementById('va-children').value);
-                const hasParents = document.getElementById('va-parents').checked;
+            function calculateBenefits(rating) {
+                if (rating === 0) return { total: 0, breakdown: [] };
 
-                // 2024 VA Disability Rates
-                const baseRates = {
-                    0: 0,
-                    10: 171.23,
-                    20: 338.49,
-                    30: 524.31,
-                    40: 755.28,
-                    50: 1041.82,
-                    60: 1319.65,
-                    70: 1663.06,
-                    80: 1933.15,
-                    90: 2172.39,
-                    100: 3737.85
-                };
+                const spouseStatus = document.getElementById('spouse-status').value;
+                const childrenUnder18 = parseInt(document.getElementById('children-under-18').value) || 0;
+                const childrenOver18 = parseInt(document.getElementById('children-over-18').value) || 0;
+                const parentStatus = document.getElementById('parent-status').value;
 
-                let totalAmount = baseRates[rating] || 0;
+                let total = baseRates[rating];
+                let breakdown = [`Base Rate: $${total.toFixed(2)}`];
 
-                // Only add dependent amounts if rating is 30% or higher
                 if (rating >= 30) {
-                    if (hasSpouse) {
-                        const spouseRates = {
-                            30: 48,
-                            40: 64,
-                            50: 81,
-                            60: 96,
-                            70: 110,
-                            80: 127,
-                            90: 142,
-                            100: 171.23
-                        };
-                        totalAmount += spouseRates[rating] || 85;
+                    // Spouse calculations
+                    if (spouseStatus !== 'none') {
+                        const withSpouse = spouseRates[rating] - baseRates[rating];
+                        total = spouseRates[rating];
+                        breakdown.push(`Spouse: +$${withSpouse.toFixed(2)}`);
+
+                        if (spouseStatus === 'spouse-aa') {
+                            total += spouseAARates[rating];
+                            breakdown.push(`Aid & Attendance for Spouse: +$${spouseAARates[rating].toFixed(2)}`);
+                        }
                     }
 
-                    if (children > 0) {
-                        const childRates = {
-                            30: 24,
-                            40: 32,
-                            50: 40,
-                            60: 48,
-                            70: 55,
-                            80: 63,
-                            90: 71,
-                            100: 85.28
-                        };
-                        const childRate = childRates[rating] || 50;
-                        totalAmount += (children * childRate);
+                    // Children calculations
+                    if (childrenUnder18 > 0) {
+                        const childAmount = childRates[rating] * childrenUnder18;
+                        total += childAmount;
+                        breakdown.push(`Children under 18 (${childrenUnder18}): +$${childAmount.toFixed(2)}`);
                     }
 
-                    if (hasParents) {
-                        const parentRates = {
-                            30: 85,
-                            40: 113,
-                            50: 142,
-                            60: 170,
-                            70: 198,
-                            80: 226,
-                            90: 255,
-                            100: 283
-                        };
-                        totalAmount += parentRates[rating] || 120;
+                    if (childrenOver18 > 0) {
+                        const schoolChildAmount = schoolChildRates[rating] * childrenOver18;
+                        total += schoolChildAmount;
+                        breakdown.push(`School Children over 18 (${childrenOver18}): +$${schoolChildAmount.toFixed(2)}`);
+                    }
+
+                    // Parent calculations
+                    if (parentStatus === 'one') {
+                        total += oneParentExtra[rating];
+                        breakdown.push(`One Parent: +$${oneParentExtra[rating].toFixed(2)}`);
+                    } else if (parentStatus === 'two') {
+                        total += twoParentsExtra[rating];
+                        breakdown.push(`Two Parents: +$${twoParentsExtra[rating].toFixed(2)}`);
                     }
                 }
 
-                return totalAmount;
+                return { total, breakdown };
             }
 
-            const updateCalculator = () => {
+            function updateCalculator() {
                 const currentRating = parseInt(document.getElementById('va-rating').value);
                 const additionalRating = parseInt(document.getElementById('va-additional-rating').value);
-                
-                // Calculate combined rating
                 const combinedRating = combinedRatingCalculation(currentRating, additionalRating);
 
-                // Update UI elements
+                // Update rating displays
                 document.getElementById('va-rating-value').textContent = 
                     `Current Rating: ${currentRating}%`;
                 document.getElementById('va-additional-rating-value').textContent = 
@@ -286,16 +428,24 @@
                 document.getElementById('combined-rating').textContent = 
                     `Combined Rating: ${combinedRating}%`;
 
-                const currentAmount = calculateBenefits(currentRating);
-                const newAmount = calculateBenefits(combinedRating);
-                const difference = newAmount - currentAmount;
+                // Calculate benefits
+                const currentBenefits = calculateBenefits(currentRating);
+                const newBenefits = calculateBenefits(combinedRating);
+                const difference = newBenefits.total - currentBenefits.total;
 
+                // Update monetary displays
                 document.getElementById('current-amount').textContent = 
-                    `$${currentAmount.toFixed(2)}`;
+                    `$${currentBenefits.total.toFixed(2)}`;
                 document.getElementById('new-amount').textContent = 
-                    `$${newAmount.toFixed(2)}`;
+                    `$${newBenefits.total.toFixed(2)}`;
                 document.getElementById('difference-amount').textContent = 
                     `Monthly Increase: $${difference.toFixed(2)}`;
+
+                // Update breakdowns
+                document.getElementById('current-breakdown').innerHTML = 
+                    currentBenefits.breakdown.join('<br>');
+                document.getElementById('new-breakdown').innerHTML = 
+                    newBenefits.breakdown.join('<br>');
 
                 // Handle dependent section visibility
                 const dependentOptions = document.getElementById('dependent-options');
@@ -310,8 +460,16 @@
                 }
             }
 
-            // Add event listeners
-            const elements = ['va-rating', 'va-additional-rating', 'va-spouse', 'va-children', 'va-parents'];
+            // Add event listeners to all inputs
+            const elements = [
+                'va-rating', 
+                'va-additional-rating', 
+                'spouse-status', 
+                'children-under-18', 
+                'children-over-18', 
+                'parent-status'
+            ];
+
             elements.forEach(id => {
                 const element = document.getElementById(id);
                 if (element) {
@@ -325,3 +483,7 @@
         });
     </script>
 </div>
+<!-- End of calculator -->
+
+</body>
+</html>
