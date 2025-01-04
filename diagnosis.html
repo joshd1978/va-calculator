@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VA Claims Guide - Diagnosis Importance</title>
+    <title>The Importance of a Diagnosis in Resolving VA Claims</title>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <style>
@@ -14,16 +14,6 @@
             --bg-color: #f5f6fa;
             --card-bg: #ffffff;
             --shadow-color: rgba(0, 0, 0, 0.1);
-            --accent-color: #e74c3c;
-        }
-
-        [data-theme="dark"] {
-            --primary-color: #3498db;
-            --secondary-color: #2c3e50;
-            --text-color: #ecf0f1;
-            --bg-color: #2c3e50;
-            --card-bg: #34495e;
-            --shadow-color: rgba(0, 0, 0, 0.3);
             --accent-color: #e74c3c;
         }
 
@@ -58,34 +48,21 @@
         }
 
         .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            text-align: center;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0.5rem;
+            padding: 1rem;
         }
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .header-image {
-            width: 60px;
-            height: 60px;
-            border-radius: 8px;
-            object-fit: cover;
-            box-shadow: 0 2px 5px var(--shadow-color);
-        }
-
-        .theme-toggle {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1.5rem;
-            color: var(--text-color);
+        .intro-image {
+            width: 100%;
+            max-width: 800px;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .progress-container {
@@ -230,12 +207,7 @@
                 padding: 1.5rem;
             }
 
-            .header-image {
-                width: 40px;
-                height: 40px;
-            }
-
-            h1 {
+            .header-content h1 {
                 font-size: 1.5rem;
             }
         }
@@ -282,11 +254,7 @@
 <body>
     <header>
         <div class="header-content">
-            <div class="header-left">
-                <img src="https://raw.githubusercontent.com/joshd1978/va-calculator/main/image.jpeg" alt="Doctor consulting with patient" class="header-image">
-                <h1>VA Claims Guide</h1>
-            </div>
-            <button class="theme-toggle" aria-label="Toggle dark mode">🌓</button>
+            <h1>The Importance of a Diagnosis in Resolving VA Claims</h1>
         </div>
     </header>
 
@@ -296,7 +264,7 @@
 
     <div class="container content">
         <section class="section" data-aos="fade-up" id="intro">
-            <h2>The Importance of a Diagnosis in Resolving VA Claims</h2>
+            <img src="https://raw.githubusercontent.com/joshd1978/va-calculator/main/image.jpeg" alt="Doctor consulting with patient" class="intro-image">
             <div class="card">
                 <p>Filing a VA benefits claim can feel overwhelming, but one element is essential for success: a proper medical diagnosis. This isn't just a formality—your diagnosis is the foundation of your claim, proving the existence of a disability and helping the VA connect it to your military service. Without it, your claim may stall or be denied.</p>
             </div>
@@ -364,14 +332,6 @@
         AOS.init({
             duration: 1000,
             once: true
-        });
-
-        // Theme Toggle
-        const themeToggle = document.querySelector('.theme-toggle');
-        themeToggle.addEventListener('click', () => {
-            document.documentElement.setAttribute('data-theme', 
-                document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'
-            );
         });
 
         // Progress Bar
