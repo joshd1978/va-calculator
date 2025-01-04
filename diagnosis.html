@@ -51,7 +51,7 @@
             text-align: center;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 1rem;
+            padding: 0.5rem;
         }
 
         .intro-image {
@@ -70,7 +70,7 @@
             height: 4px;
             background: var(--bg-color);
             position: fixed;
-            top: 75px;
+            top: 60px;
             z-index: 1000;
         }
 
@@ -81,7 +81,7 @@
         }
 
         .content {
-            margin-top: 95px;
+            margin-top: 80px;
         }
 
         .section {
@@ -199,16 +199,30 @@
         }
 
         @media (max-width: 768px) {
+            .header-content {
+                padding: 0.25rem;
+            }
+
+            .header-content h1 {
+                font-size: 1.25rem;
+                line-height: 1.3;
+                padding: 0.5rem;
+            }
+
+            .progress-container {
+                top: 55px;
+            }
+
+            .content {
+                margin-top: 75px;
+            }
+
             .container {
                 padding: 1rem;
             }
 
             .section {
                 padding: 1.5rem;
-            }
-
-            .header-content h1 {
-                font-size: 1.5rem;
             }
         }
 
