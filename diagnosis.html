@@ -29,7 +29,7 @@
             line-height: 1.6;
             color: var(--text-color);
             background: var(--bg-color);
-            padding-top: 90px; /* Added to account for fixed header */
+            padding-top: 90px;
         }
 
         .container {
@@ -63,11 +63,14 @@
         .header-content h1 {
             margin: 0;
             padding: 0;
+            color: var(--primary-color);
         }
 
         .intro-image {
             width: 100%;
             max-width: 800px;
+            height: 400px;
+            object-fit: cover;
             border-radius: 12px;
             margin-bottom: 2rem;
             box-shadow: 0 4px 15px var(--shadow-color);
@@ -95,7 +98,84 @@
             margin-top: 20px;
         }
 
-        /* Rest of your existing styles remain the same until the media queries */
+        .section {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 15px var(--shadow-color);
+        }
+
+        .section h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .section p {
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px var(--shadow-color);
+            cursor: pointer;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .floating-nav {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--card-bg);
+            padding: 1rem;
+            border-radius: 30px;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            display: none;
+        }
+
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            background: var(--text-color);
+            border-radius: 50%;
+            margin: 1rem 0;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-dot.active {
+            background: var(--accent-color);
+            transform: scale(1.3);
+        }
+
+        .highlight {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .list-item {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .list-item:before {
+            content: "•";
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+        }
 
         @media (max-width: 768px) {
             body {
@@ -128,6 +208,10 @@
             .section {
                 padding: 1.5rem;
             }
+
+            .intro-image {
+                height: 300px;
+            }
         }
 
         @media (max-width: 380px) {
@@ -147,44 +231,10 @@
                 font-size: 1.1rem;
                 line-height: 1.4;
             }
-        }
 
-        /* Your existing styles for sections, cards, etc. remain the same */
-        .section {
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 2rem;
-            margin: 2rem 0;
-            box-shadow: 0 4px 15px var(--shadow-color);
-        }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin: 1rem 0;
-            box-shadow: 0 4px 6px var(--shadow-color);
-            cursor: pointer;
-            transform: translateY(0);
-            transition: transform 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        /* Rest of your existing styles remain the same */
-        
-        .floating-nav {
-            position: fixed;
-            right: 2rem;
-            top: 50%;
-            transform: translateY(-50%);
-            background: var(--card-bg);
-            padding: 1rem;
-            border-radius: 30px;
-            box-shadow: 0 4px 15px var(--shadow-color);
-            display: none;
+            .intro-image {
+                height: 250px;
+            }
         }
 
         @media (min-width: 1024px) {
@@ -192,33 +242,9 @@
                 display: block;
             }
         }
-
-        .nav-dot {
-            width: 12px;
-            height: 12px;
-            background: var(--text-color);
-            border-radius: 50%;
-            margin: 1rem 0;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        .nav-dot.active {
-            background: var(--accent-color);
-            transform: scale(1.3);
-        }
-
-        .highlight {
-            color: var(--accent-color);
-            font-weight: 600;
-        }
-
-        /* Rest of your existing styles */
     </style>
 </head>
-<!-- Rest of your HTML remains exactly the same -->
 <body>
-    <!-- Your existing HTML content remains exactly the same -->
     <header>
         <div class="header-content">
             <h1>The Importance of a Diagnosis in Resolving VA Claims</h1>
@@ -229,11 +255,88 @@
         <div class="progress-bar"></div>
     </div>
 
-    <!-- Rest of your existing HTML content -->
-    
-    <!-- Your existing script remains the same -->
+    <div class="container">
+        <section class="section" id="intro" data-aos="fade-up">
+            <img src="https://picsum.photos/800/400?random=1" alt="Veterans Affairs Medical Center" class="intro-image">
+            <p>For veterans seeking disability benefits, obtaining a proper medical diagnosis is crucial. This comprehensive guide explains why a diagnosis matters and how it can significantly impact your VA claim's success.</p>
+        </section>
+
+        <section class="section" id="why-matters" data-aos="fade-up">
+            <h2>Why a Diagnosis Matters</h2>
+            <div class="card">
+                <h3>Legal Requirement</h3>
+                <p>A medical diagnosis is a fundamental requirement for VA disability claims. Without it, proving service connection becomes significantly more challenging.</p>
+            </div>
+            <div class="card">
+                <h3>Claim Validation</h3>
+                <p>The VA needs to understand exactly what condition they're evaluating. A proper diagnosis provides this crucial information.</p>
+            </div>
+            <div class="card">
+                <h3>Rating Determination</h3>
+                <p>The specific diagnosis helps determine the appropriate disability rating, which directly affects your compensation.</p>
+            </div>
+        </section>
+
+        <section class="section" id="strengthening" data-aos="fade-up">
+            <h2>Strengthening Your Claim with Medical Evidence</h2>
+            <div class="list-item">
+                <p>Seek regular medical treatment and maintain detailed records</p>
+            </div>
+            <div class="list-item">
+                <p>Ensure your medical records clearly document your symptoms and diagnosis</p>
+            </div>
+            <div class="list-item">
+                <p>Consider getting a second opinion if needed</p>
+            </div>
+            <div class="list-item">
+                <p>Keep track of how your condition affects daily activities</p>
+            </div>
+        </section>
+
+        <section class="section" id="right-diagnosis" data-aos="fade-up">
+            <h2>Getting the Right Diagnosis</h2>
+            <p>To ensure you receive the correct diagnosis:</p>
+            <div class="card">
+                <h3>Choose the Right Healthcare Provider</h3>
+                <p>Select a provider familiar with VA claims and your specific condition.</p>
+            </div>
+            <div class="card">
+                <h3>Document Everything</h3>
+                <p>Keep detailed records of all symptoms, treatments, and medical visits.</p>
+            </div>
+            <div class="card">
+                <h3>Be Thorough</h3>
+                <p>Describe all symptoms and their impact on your daily life in detail.</p>
+            </div>
+        </section>
+
+        <section class="section" id="success" data-aos="fade-up">
+            <h2>Keys to Success</h2>
+            <div class="highlight">Remember these crucial points:</div>
+            <div class="list-item">
+                <p>Start seeking treatment as soon as possible</p>
+            </div>
+            <div class="list-item">
+                <p>Maintain consistent medical care</p>
+            </div>
+            <div class="list-item">
+                <p>Keep copies of all medical records</p>
+            </div>
+            <div class="list-item">
+                <p>Consider working with a VA-accredited representative</p>
+            </div>
+        </section>
+    </div>
+
+    <nav class="floating-nav">
+        <div class="nav-dot active" data-section="intro"></div>
+        <div class="nav-dot" data-section="why-matters"></div>
+        <div class="nav-dot" data-section="strengthening"></div>
+        <div class="nav-dot" data-section="right-diagnosis"></div>
+        <div class="nav-dot" data-section="success"></div>
+    </nav>
+
     <script>
-        // Your existing JavaScript remains exactly the same
         AOS.init({
             duration: 1000,
             once: true
