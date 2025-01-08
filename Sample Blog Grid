@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VA Articles</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .articles-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .articles-scroll {
+            display: flex;
+            gap: 2rem;
+            padding: 1rem;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .articles-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .article-preview {
+            min-width: 350px;
+            max-width: 350px;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            height: 500px;
+        }
+
+        .article-preview:hover {
+            transform: translateY(-5px);
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .preview-text {
+            padding: 1.5rem;
+            height: 250px;
+            position: relative;
+        }
+
+        .article-preview h2 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .article-preview p {
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .preview-content p {
+            display: -webkit-box;
+            -webkit-line-clamp: 6;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 0;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .preview-content::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 120px;
+            background: linear-gradient(
+                transparent 0%,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.7) 50%,
+                rgba(255, 255, 255, 0.9) 75%,
+                white 100%
+            );
+            pointer-events: none;
+        }
+
+        .expanded-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 2rem;
+        }
+
+        .expanded-article {
+            background: white;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            border-radius: 20px;
+            padding: 2rem;
+            overflow-y: auto;
+            position: relative;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.3s ease;
+        }
+
+        .expanded-article img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .expanded-article.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .scroll-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .scroll-btn {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .scroll-btn:hover {
+            background: #555;
+        }
+
+        @media (max-width: 768px) {
+            .article-preview {
+                min-width: 300px;
+                max-width: 300px;
+            }
+
+            .expanded-article {
+                width: 95%;
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="articles-container">
+        <div class="articles-scroll" id="articlesScroll">
+            <!-- Articles will be dynamically added here -->
+        </div>
+        <div class="scroll-buttons">
+            <button class="scroll-btn" onclick="scrollArticles('left')">←</button>
+            <button class="scroll-btn" onclick="scrollArticles('right')">→</button>
+        </div>
+    </div>
+
+    <div class="expanded-overlay" id="overlay">
+        <div class="expanded-article" id="expandedArticle">
+            <button class="close-btn" onclick="closeArticle()">×</button>
+            <div id="expandedContent"></div>
+        </div>
+    </div>
+
+    <script>
+        const articles = [
+            {
+                title: "How Disability Ratings Determine Compensation",
+                image: "https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_585891531-Medium.jpeg",
+                content: `
+                    <h2>How Disability Ratings Determine Compensation</h2>
+                    <img src="https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_585891531-Medium.jpeg" alt="VA Disability Rating Discussion">
+                    <p>The amount of monthly VA disability compensation you could receive depends your disability rating, ranging from 0% to 100% in chunks of 10%. A rating is assigned based on the severity of each diagnosed condition and its impact on your occupational and social functioning. That means the harder your disability makes it for you to work, then the higher your rating will probably be.</p>
+                    <p>Understanding how VA disability ratings work is crucial for veterans seeking compensation. The rating system is designed to reflect the degree to which a service-connected disability impacts a veteran's ability to work and maintain quality of life.</p>
+                `
+            },
+            {
+                title: "Tinnitus and VA Disability Claims",
+                image: "https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_431568726-Medium.jpeg",
+                content: `
+                    <h2>Tinnitus and VA Disability Claims</h2>
+                    <img src="https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_431568726-Medium.jpeg" alt="Tinnitus Treatment">
+                    <p>Tinnitus, or ringing in the ears, is an unfortunately common condition among veterans who faced frequent and prolonged exposure to loud noises during their military service. The Department of Veterans Affairs (VA) offers monthly disability benefits for tinnitus, recognizing it as a significant service-connected disability that affects many veterans.</p>
+                    <p>Veterans experiencing tinnitus may qualify for VA disability compensation if they can establish a service connection. This typically involves demonstrating that the condition developed during or was caused by military service.</p>
+                `
+            },
+            {
+                title: "VA Disability Rating for PTSD",
+                image: "https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_485414666-1-Medium.jpeg",
+                content: `
+                    <h2>VA Disability Rating for PTSD: Criteria, Eligibility, and Making a Strong Disability Claim</h2>
+                    <img src="https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_485414666-1-Medium.jpeg" alt="PTSD Treatment">
+                    <p>Post-traumatic stress disorder (PTSD) is a disabling mental health condition that can develop after exposure to a traumatic event. Among veterans, PTSD is particularly prevalent due to experiencing combat, military sexual trauma, or other trauma while serving. The VA recognizes PTSD as a serious condition that can significantly impact a veteran's quality of life.</p>
+                    <p>Understanding how the VA rates PTSD and what evidence is needed to support a claim is crucial for veterans seeking disability compensation. The rating system for PTSD is based on how severely the condition affects a veteran's social and occupational functioning.</p>
+                `
+            },
+            {
+                title: "The Importance of a Diagnosis in Resolving VA Claims",
+                image: "https://raw.githubusercontent.com/joshd1978/va-calculator/main/image.jpeg",
+                content: `
+                    <h2>The Importance of a Diagnosis in Resolving VA Claims</h2>
+                    <img src="https://raw.githubusercontent.com/joshd1978/va-calculator/main/image.jpeg" alt="VA Claims Process">
+                    <p>Filing a VA benefits claim can feel overwhelming, but one element is essential for success: a proper medical diagnosis. This isn't just a formality—your diagnosis is the foundation of your claim, proving the existence of a disability and helping the VA connect it to your military service. Without it, your claim may stall or be denied.</p>
+                    <p>A clear, documented diagnosis from a qualified healthcare provider is crucial evidence in your VA claim. It helps establish both the existence and severity of your condition, which are key factors in determining your disability rating and compensation.</p>
+                `
+            }
+        ];
+
+        // Initialize articles with fixed preview text
+        const articlesScroll = document.getElementById('articlesScroll');
+        articles.forEach((article, index) => {
+            const preview = document.createElement('div');
+            preview.className = 'article-preview';
+            
+            // Extract the paragraph text without the HTML tags
+            const paragraphText = article.content.match(/<p>(.*?)<\/p>/g)
+                ?.map(p => p.replace(/<\/?p>/g, ''))
+                .join('\n\n');
+
+            preview.innerHTML = `
+                <img src="${article.image}" alt="${article.title}" class="preview-image">
+                <div class="preview-text">
+                    <h2>${article.title}</h2>
+                    <div class="preview-content">
+                        <p>${paragraphText}</p>
+                    </div>
+                </div>
+            `;
+            preview.onclick = () => expandArticle(index);
+            articlesScroll.appendChild(preview);
+        });
+
+        function expandArticle(index) {
+            const overlay = document.getElementById('overlay');
+            const expandedArticle = document.getElementById('expandedArticle');
+            const expandedContent = document.getElementById('expandedContent');
+            
+            expandedContent.innerHTML = articles[index].content;
+            overlay.style.display = 'flex';
+            setTimeout(() => {
+                expandedArticle.classList.add('active');
+            }, 10);
+        }
+
+        function closeArticle() {
+            const overlay = document.getElementById('overlay');
+            const expandedArticle = document.getElementById('expandedArticle');
+            
+            expandedArticle.classList.remove('active');
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 300);
+        }
+
+        document.getElementById('overlay').addEventListener('click', (e) => {
+            if (e.target.id === 'overlay') {
+                closeArticle();
+            }
+        });
+
+        function scrollArticles(direction) {
+            const container = document.getElementById('articlesScroll');
+            const scrollAmount = 400;
+            
+            if (direction === 'left') {
+                container.scrollLeft -= scrollAmount;
+            } else {
+                container.scrollLeft += scrollAmount;
+            }
+        }
+    </script>
+</body>
+</html>
