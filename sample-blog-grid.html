@@ -1,222 +1,257 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VA Articles</title>
-    <style>
-        * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    scroll-behavior: smooth;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VA Articles</title>
+<style>
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
 }
 
 body {
-    font-family: 'Arial', sans-serif;
-    background: #f5f5f5;
-    min-height: 100vh;
-    padding: 2rem;
+font-family: 'Arial', sans-serif;
+background: #f5f5f5;
+min-height: 100vh;
+padding: 2rem;
 }
 
-/* Existing Articles Grid Styles */
 .articles-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    overflow: hidden;
+max-width: 1400px;
+margin: 0 auto;
+overflow: hidden;
 }
 
 .articles-scroll {
-    display: flex;
-    gap: 2rem;
-    padding: 1rem;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+display: flex;
+gap: 2rem;
+padding: 1rem;
+overflow-x: auto;
+scroll-behavior: smooth;
+-ms-overflow-style: none;
+scrollbar-width: none;
 }
 
 .articles-scroll::-webkit-scrollbar {
-    display: none;
+display: none;
 }
 
 .article-preview {
-    min-width: 350px;
-    max-width: 350px;
-    background: white;
-    border-radius: 15px;
-    overflow: hidden;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease;
-    height: 500px;
+min-width: 350px;
+max-width: 350px;
+background: white;
+border-radius: 15px;
+overflow: hidden;
+cursor: pointer;
+box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+transition: transform 0.3s ease;
+height: 500px;
 }
 
 .article-preview:hover {
-    transform: translateY(-5px);
+transform: translateY(-5px);
 }
 
 .preview-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
+width: 100%;
+height: 200px;
+object-fit: cover;
 }
 
 .preview-text {
-    padding: 1.5rem;
-    height: 250px;
-    position: relative;
+padding: 1.5rem;
+height: 250px;
+position: relative;
 }
 
 .article-preview h2 {
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-    color: #333;
+font-size: 1.25rem;
+margin-bottom: 1rem;
+color: #333;
+}
+
+.article-preview p {
+font-size: 0.95rem;
+color: #666;
+line-height: 1.6;
 }
 
 .preview-content p {
-    display: -webkit-box;
-    -webkit-line-clamp: 6;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    position: relative;
-    margin-bottom: 0;
-    line-height: 1.6;
-    font-size: 0.95rem;
-    color: #666;
+display: -webkit-box;
+-webkit-line-clamp: 6;
+-webkit-box-orient: vertical;
+overflow: hidden;
+position: relative;
+margin-bottom: 0;
+line-height: 1.6;
+font-size: 0.95rem;
 }
 
 .preview-content::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 120px;
-    background: linear-gradient(
-        transparent 0%,
-        rgba(255, 255, 255, 0) 0%,
-        rgba(255, 255, 255, 0.7) 50%,
-        rgba(255, 255, 255, 0.9) 75%,
-        white 100%
-    );
-    pointer-events: none;
+content: '';
+position: absolute;
+bottom: 0;
+left: 0;
+right: 0;
+height: 120px;
+background: linear-gradient(
+transparent 0%,
+rgba(255, 255, 255, 0) 0%,
+rgba(255, 255, 255, 0.7) 50%,
+rgba(255, 255, 255, 0.9) 75%,
+white 100%
+);
+pointer-events: none;
 }
 
-/* Expanded Article Styles */
 .expanded-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0,0,0,0.5);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    padding: 2rem;
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: rgba(0,0,0,0.5);
+display: none;
+justify-content: center;
+align-items: center;
+z-index: 1000;
+padding: 2rem;
 }
 
 .expanded-article {
-    background: white;
-    width: 90%;
-    max-width: 800px;
-    max-height: 90vh;
-    border-radius: 20px;
-    padding: 2rem;
-    overflow-y: auto;
-    position: relative;
-    opacity: 0;
-    transform: scale(0.9);
-    transition: all 0.3s ease;
+background: white;
+width: 90%;
+max-width: 800px;
+max-height: 90vh;
+border-radius: 20px;
+padding: 2rem;
+overflow-y: auto;
+position: relative;
+opacity: 0;
+transform: scale(0.9);
+transition: all 0.3s ease;
+}
+
+.expanded-article img {
+width: 100%;
+max-height: 400px;
+object-fit: cover;
+border-radius: 10px;
+margin-bottom: 1.5rem;
 }
 
 .expanded-article.active {
-    opacity: 1;
-    transform: scale(1);
-}
-
-/* Header Styles for Expanded Article */
-.expanded-article .header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: white;
-    padding: 15px 0;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    z-index: 1000;
-}
-
-.expanded-article .header-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.expanded-article .header-content h1 {
-    font-size: 1.8em;
-    color: #2c3e50;
-    line-height: 1.3;
-    padding: 0 20px;
-}
-
-/* Progress Bar Styles */
-.expanded-article .progress-container {
-    width: 100%;
-    height: 4px;
-    background: #f0f0f0;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1001;
-}
-
-.expanded-article .progress-bar {
-    height: 100%;
-    background: #3498db;
-    width: 0%;
-    transition: width 0.3s ease;
-}
-
-/* Content Styles for Expanded Article */
-.expanded-article .container {
-    background: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+opacity: 1;
+transform: scale(1);
 }
 
 .expanded-article h2 {
-    color: #34495e;
-    margin: 30px 0 20px 0;
-    font-size: 1.8em;
+margin-bottom: 1.5rem;
+color: #333;
+font-size: 2rem;
 }
 
 .expanded-article h3 {
-    color: #2c3e50;
-    margin: 25px 0 15px 0;
-    font-size: 1.4em;
+margin: 2rem 0 1rem;
+color: #444;
+font-size: 1.5rem;
+}
+
+.expanded-article h4 {
+margin: 1.5rem 0 0.8rem;
+color: #555;
+font-size: 1.2rem;
 }
 
 .expanded-article p {
-    margin-bottom: 20px;
-    font-size: 1.1em;
-    line-height: 1.8;
-    color: #555;
+margin-bottom: 1rem;
+line-height: 1.8;
+color: #555;
 }
 
-.expanded-article .hero-image {
-    width: 100%;
-    max-width: 800px;
-    height: auto;
-    border-radius: 10px;
-    margin: 20px auto 30px auto;
-    display: block;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+.close-btn {
+position: absolute;
+top: 1rem;
+right: 1rem;
+background: none;
+border: none;
+font-size: 1.5rem;
+cursor: pointer;
+color: #666;
+padding: 0.5rem;
+border-radius: 50%;
+transition: background 0.3s ease;
 }
 
+.close-btn:hover {
+background: #f0f0f0;
+}
+
+.progress-container {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 4px;
+background: #f0f0f0;
+z-index: 1001;
+display: none;
+}
+
+.progress-bar {
+height: 100%;
+background: #4CAF50;
+width: 0%;
+transition: width 0.2s ease;
+}
+
+.reading-status {
+position: fixed;
+top: 10px;
+right: 20px;
+background: rgba(255, 255, 255, 0.9);
+padding: 8px 15px;
+border-radius: 20px;
+box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+font-size: 14px;
+display: none;
+z-index: 1001;
+}
+
+.scroll-buttons {
+display: flex;
+justify-content: center;
+gap: 1rem;
+margin-top: 1rem;
+}
+
+.scroll-btn {
+background: #333;
+color: white;
+border: none;
+padding: 0.5rem 1rem;
+border-radius: 25px;
+cursor: pointer;
+transition: background 0.3s ease;
+}
+
+.scroll-btn:hover {
+background: #555;
+}
+
+@media (max-width: 768px) {
+.article-preview {
+min-width: 300px;
+max-width: 300px;
+}
+
+.expanded-article {
+width: 95%;
+padding: 1.5rem;
+}
+          
 .expanded-article .divider {
     height: 2px;
     background: #e0e0e0;
@@ -269,8 +304,7 @@ body {
     transform: scaleX(1);
 }
 
-.expanded-article ol,
-.expanded-article ul {
+.expanded-article ol {
     margin-left: 25px;
     margin-bottom: 20px;
 }
@@ -281,442 +315,343 @@ body {
 
 .expanded-article ul {
     list-style-type: disc;
+    margin-left: 25px;
+    margin-bottom: 20px;
 }
-
-/* Close Button */
-.close-btn {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #666;
-    padding: 0.5rem;
-    border-radius: 50%;
-    transition: background 0.3s ease;
-    z-index: 1002;
 }
-
-.close-btn:hover {
-    background: #f0f0f0;
-}
-
-/* Scroll Buttons */
-.scroll-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-top: 1rem;
-}
-
-.scroll-btn {
-    background: #333;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-}
-
-.scroll-btn:hover {
-    background: #555;
-}
-
-/* Media Queries */
-@media (max-width: 768px) {
-    .article-preview {
-        min-width: 300px;
-        max-width: 300px;
-    }
-
-    .expanded-article {
-        width: 95%;
-        padding: 1.5rem;
-    }
-
-    .expanded-article .header-content h1 {
-        font-size: 1.5em;
-        line-height: 1.4;
-    }
-
-    .expanded-article h2 {
-        font-size: 1.5em;
-        margin: 25px 0 15px 0;
-    }
-
-    .expanded-article h3 {
-        font-size: 1.2em;
-    }
-
-    .expanded-article p {
-        font-size: 1em;
-        margin-bottom: 15px;
-    }
-
-    .expanded-article .hero-image {
-        margin: 15px auto 25px auto;
-    }
-
-    .expanded-article .divider {
-        margin: 30px 0;
-    }
-}
-
-@media (max-width: 480px) {
-    .expanded-article {
-        padding: 1rem;
-    }
-
-    .expanded-article .header-content h1 {
-        font-size: 1.3em;
-    }
-
-    .expanded-article h2 {
-        font-size: 1.3em;
-    }
-
-    .expanded-article .example-box {
-        padding: 15px;
-    }
-}
-    </style>
+</style>
 </head>
 <body>
-    <div class="progress-container" id="progressContainer">
-        <div class="progress-bar" id="progressBar"></div>
-    </div>
-    <div class="reading-status" id="readingStatus">0% read</div>
+<div class="progress-container" id="progressContainer">
+<div class="progress-bar" id="progressBar"></div>
+</div>
+<div class="reading-status" id="readingStatus">0% read</div>
 
-    <div class="articles-container">
-        <div class="articles-scroll" id="articlesScroll">
-            <!-- Articles will be dynamically added here -->
-        </div>
-        <div class="scroll-buttons">
-            <button class="scroll-btn" onclick="scrollArticles('left')">←</button>
-            <button class="scroll-btn" onclick="scrollArticles('right')">→</button>
-        </div>
-    </div>
+<div class="articles-container">
+<div class="articles-scroll" id="articlesScroll">
+<!-- Articles will be dynamically added here -->
+</div>
+<div class="scroll-buttons">
+<button class="scroll-btn" onclick="scrollArticles('left')">←</button>
+<button class="scroll-btn" onclick="scrollArticles('right')">→</button>
+</div>
+</div>
 
-    <div class="expanded-overlay" id="overlay">
-        <div class="expanded-article" id="expandedArticle">
-            <button class="close-btn" onclick="closeArticle()">×</button>
-            <div id="expandedContent"></div>
-        </div>
-    </div>
+<div class="expanded-overlay" id="overlay">
+<div class="expanded-article" id="expandedArticle">
+<button class="close-btn" onclick="closeArticle()">×</button>
+<div id="expandedContent"></div>
+</div>
+</div>
 
-    <script>
-    const articles = [
-        {
-    title: "Understanding 2024 VA Disability Rates",
-    image: "https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_585891531-Medium.jpeg",
-    content: `
-        <h2>How Disability Ratings Determine Compensation</h2>
-        <img src="https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_585891531-Medium.jpeg" alt="VA Disability Rating Discussion">
-        
-        // Replace everything between these backticks with the following content:
-        
-        <p>The amount of monthly VA disability compensation you could receive depends your disability rating, ranging from 0% to 100% in chunks of 10%.</p>
+<script>
+const articles = [
+{
+title: "Understanding 2024 VA Disability Rates",
+image: "https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_585891531-Medium.jpeg",
+content: `
+       <h2>How Disability Ratings Determine Compensation</h2>
+       <img src="https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_585891531-Medium.jpeg" alt="VA Disability Rating Discussion">
+       
+       // Replace everything between these backticks with the following content:
+       
+       <p>The amount of monthly VA disability compensation you could receive depends your disability rating, ranging from 0% to 100% in chunks of 10%.</p>
 
-        <p>A rating is assigned based on the severity of each diagnosed condition and its impact on your occupational and social functioning. That means the harder your disability makes it for you to work, then the higher your rating will probably be. Higher ratings mean you'll get a larger amount of monthly pay. If you have multiple service-connected conditions, these will also have those individual ratings combined into a single rating.</p>
+       <p>A rating is assigned based on the severity of each diagnosed condition and its impact on your occupational and social functioning. That means the harder your disability makes it for you to work, then the higher your rating will probably be. Higher ratings mean you'll get a larger amount of monthly pay. If you have multiple service-connected conditions, these will also have those individual ratings combined into a single rating.</p>
 
-        <p>You may also receive additional compensation for any dependents, such as an eligible spouse, any children, and/or dependent parent(s). Additional compensation amounts are provided for those dependents.</p>
+       <p>You may also receive additional compensation for any dependents, such as an eligible spouse, any children, and/or dependent parent(s). Additional compensation amounts are provided for those dependents.</p>
 
-        <h3>Overview of the New 2024 VA Disability Rates</h3>
-        <p>On December 1, 2023, updated disability rates will take effect across rating percentages for veterans with and without eligible dependents. For example, a single veteran with a combined 60% rating can expect their monthly payment to increase from $1319.65 to $1,361.88 under the new 2024 rates. Similarly, a 100% disabled veteran with a spouse and child will see their monthly payment go up to $4,089.87.</p>
+       <h3>Overview of the New 2024 VA Disability Rates</h3>
+       <p>On December 1, 2023, updated disability rates will take effect across rating percentages for veterans with and without eligible dependents. For example, a single veteran with a combined 60% rating can expect their monthly payment to increase from $1319.65 to $1,361.88 under the new 2024 rates. Similarly, a 100% disabled veteran with a spouse and child will see their monthly payment go up to $4,089.87.</p>
 
-        <p>There are various VA Disability Pay calculators online that can help you input your specific disability rating percentage and dependency status to find out an estimated pay amount for 2024. These tool are useful for budgeting, financial planning purposes, and determining whether you're receiving all the benefits you're entitled to.</p>
+       <p>There are various VA Disability Pay calculators online that can help you input your specific disability rating percentage and dependency status to find out an estimated pay amount for 2024. These tool are useful for budgeting, financial planning purposes, and determining whether you're receiving all the benefits you're entitled to.</p>
 
-        <h3>2024 VA Disability Rates</h3>
-        <p>Effective Date: December 1, 2023</p>
+       <h3>2024 VA Disability Rates</h3>
+       <p>Effective Date: December 1, 2023</p>
 
-        <p>Note: Veterans with a 10% to 20% disability rating do not receive additional compensation for having a spouse, dependent child, or dependent parent.</p>
+       <p>Note: Veterans with a 10% to 20% disability rating do not receive additional compensation for having a spouse, dependent child, or dependent parent.</p>
 
-        <h4>Basic Disability Rates:</h4>
-        <p>Disability Rating - Monthly Payment<br>
-        10% - $171.23<br>
-        20% - $338.49</p>
+       <h4>Basic Disability Rates:</h4>
+       <p>Disability Rating - Monthly Payment<br>
+       10% - $171.23<br>
+       20% - $338.49</p>
 
-        <h4>VA Disability Compensation Based on Rating and Household:</h4>
-        <p>Disability Rating - Veteran (alone) - With Spouse<br>
-        30% - $524.31 - $586.31<br>
-        40% - $755.28 - $837.28<br>
-        50% - $1,075.16 - $1,179.16<br>
-        60% - $1,361.88 - $1,486.88<br>
-        70% - $1,716.28 - $1,861.21<br>
-        80% - $1,995.01 - $2,161.01<br>
-        90% - $2,241.91 - $2,428.91<br>
-        100% - $3,737.85 - $3,946.25</p>
+       <h4>VA Disability Compensation Based on Rating and Household:</h4>
+       <p>Disability Rating - Veteran (alone) - With Spouse<br>
+       30% - $524.31 - $586.31<br>
+       40% - $755.28 - $837.28<br>
+       50% - $1,075.16 - $1,179.16<br>
+       60% - $1,361.88 - $1,486.88<br>
+       70% - $1,716.28 - $1,861.21<br>
+       80% - $1,995.01 - $2,161.01<br>
+       90% - $2,241.91 - $2,428.91<br>
+       100% - $3,737.85 - $3,946.25</p>
 
-        <h3>How Does VA Disability Compensation Work?</h3>
-        <p>VA disability compensation is a tax-free monetary benefit paid to veterans who have disabilities resulting from diseases or injuries received or made worse during active military service. This program is separate from military retirement pay and is not subject to federal or state taxes.</p>
+       <h3>How Does VA Disability Compensation Work?</h3>
+       <p>VA disability compensation is a tax-free monetary benefit paid to veterans who have disabilities resulting from diseases or injuries received or made worse during active military service. This program is separate from military retirement pay and is not subject to federal or state taxes.</p>
 
-        <p>Eligibility for disability compensation depends on whether you receive an official rating decision of at least 10% from the VA. Each diagnosed condition linked to your time in service is assigned a rating between 0% and 100% based on the VASRD disability rating schedule. Those individual ratings are then combined per VA guidelines into a single rating which determines how much you can receive monthly.</p>
+       <p>Eligibility for disability compensation depends on whether you receive an official rating decision of at least 10% from the VA. Each diagnosed condition linked to your time in service is assigned a rating between 0% and 100% based on the VASRD disability rating schedule. Those individual ratings are then combined per VA guidelines into a single rating which determines how much you can receive monthly.</p>
 
-        <h3>The Role of COLA in Benefits Determination</h3>
-        <p>Cost-of-living adjustments or COLAs are crucial to maintaining the real value of VA benefits over time as the cost of living goes up. The Bureau of Labor Statistics keeps an eye on inflation using the Consumer Price Index for Urban Wage Earners (CPI-W). Yearly changes in inflation determine VA COLA increases.</p>
+       <h3>The Role of COLA in Benefits Determination</h3>
+       <p>Cost-of-living adjustments or COLAs are crucial to maintaining the real value of VA benefits over time as the cost of living goes up. The Bureau of Labor Statistics keeps an eye on inflation using the Consumer Price Index for Urban Wage Earners (CPI-W). Yearly changes in inflation determine VA COLA increases.</p>
 
-        <p>For 2023, the CPI-W rose 8.7% on average leading to the corresponding 8.7% benefits COLA that began in December 2022. Starting in December 2023, the COLA is set to increase by 3.2%.</p>
+       <p>For 2023, the CPI-W rose 8.7% on average leading to the corresponding 8.7% benefits COLA that began in December 2022. Starting in December 2023, the COLA is set to increase by 3.2%.</p>
 
-        <h3>Conclusion</h3>
-        <p>The U.S Department of Veterans Affairs disability compensation program delivers valuable financial support to former military members disabled during active service. Updated rating decisions in 2023 will incorporate an 3.2% COLA increase starting December 1st, 2023 to counter consumer inflation. Veterans should review their future monthly amounts and feel confident benefit rates will sustain real value thanks to automatic COLA indexation against rising costs.</p>
-    `
+       <h3>Conclusion</h3>
+       <p>The U.S Department of Veterans Affairs disability compensation program delivers valuable financial support to former military members disabled during active service. Updated rating decisions in 2023 will incorporate an 3.2% COLA increase starting December 1st, 2023 to counter consumer inflation. Veterans should review their future monthly amounts and feel confident benefit rates will sustain real value thanks to automatic COLA indexation against rising costs.</p>
+   `
 },
-        {
-    title: "Tinnitus and VA Disability Claims",
-    image: "https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_431568726-Medium.jpeg",
-    content: `
-        <h2>Tinnitus and VA Disability Claims</h2>
-        <img src="https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_431568726-Medium.jpeg" alt="Tinnitus Treatment">
-        
-        <p>Tinnitus, or ringing in the ears, is an unfortunately common condition among veterans who faced frequent and prolonged exposure to loud noises during their military service. The Department of Veterans Affairs (VA) offers monthly disability benefits for tinnitus. However, many veterans find their claims denied even when medical records clearly show a connection between their tinnitus and noise exposure during their service.</p>
+{
+title: "Tinnitus and VA Disability Claims",
+image: "https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_431568726-Medium.jpeg",
+content: `
+       <h2>Tinnitus and VA Disability Claims</h2>
+       <img src="https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_431568726-Medium.jpeg" alt="Tinnitus Treatment">
+       
+       <p>Tinnitus, or ringing in the ears, is an unfortunately common condition among veterans who faced frequent and prolonged exposure to loud noises during their military service. The Department of Veterans Affairs (VA) offers monthly disability benefits for tinnitus. However, many veterans find their claims denied even when medical records clearly show a connection between their tinnitus and noise exposure during their service.</p>
 
-        <p>The appeals process can be long and frustrating, leaving deserving veterans without assistance. This is where veterans disability lawyers can provide invaluable help. Firms like Veteran Legal have the expertise to guide veterans through the process and can help you build strong arguments to establish service connection for tinnitus.</p>
+       <p>The appeals process can be long and frustrating, leaving deserving veterans without assistance. This is where veterans disability lawyers can provide invaluable help. Firms like Veteran Legal have the expertise to guide veterans through the process and can help you build strong arguments to establish service connection for tinnitus.</p>
 
-        <h3>What is Tinnitus?</h3>
-        <p>Tinnitus is the perception of noise or ringing in the ears. Different people experience it in different ways – you might hear it in one ear or both, as a high-pitched ringing, buzzing, roaring, clicking, hissing or even as musical tones. The sounds can be sporadic or continuous. Sometimes, external noises make tinnitus temporarily quieter or louder.</p>
+       <h3>What is Tinnitus?</h3>
+       <p>Tinnitus is the perception of noise or ringing in the ears. Different people experience it in different ways – you might hear it in one ear or both, as a high-pitched ringing, buzzing, roaring, clicking, hissing or even as musical tones. The sounds can be sporadic or continuous. Sometimes, external noises make tinnitus temporarily quieter or louder.</p>
 
-        <p>While tinnitus sometimes stems from age-related hearing loss or cerumen (ear wax) build-up, one of the most common causes is excessive noise exposure. Loud concerts, machinery operation, or gunfire during military service can all contribute to or trigger tinnitus. This happens when sound damages the delicate hair cells in the inner ear. Traumatic brain injuries and some medications have also been linked to tinnitus.</p>
+       <p>While tinnitus sometimes stems from age-related hearing loss or cerumen (ear wax) build-up, one of the most common causes is excessive noise exposure. Loud concerts, machinery operation, or gunfire during military service can all contribute to or trigger tinnitus. This happens when sound damages the delicate hair cells in the inner ear. Traumatic brain injuries and some medications have also been linked to tinnitus.</p>
 
-        <p>For many, tinnitus symptoms come and go, allowing them to carry on with daily life. But for others, the persistence of disruptive phantom sounds can lead to sleep deprivation, trouble concentrating, anxiety, and depression. Learning effective ways to cope is crucial.</p>
+       <p>For many, tinnitus symptoms come and go, allowing them to carry on with daily life. But for others, the persistence of disruptive phantom sounds can lead to sleep deprivation, trouble concentrating, anxiety, and depression. Learning effective ways to cope is crucial.</p>
 
-        <h3>Did My Military Service Cause My Tinnitus?</h3>
-        <p>The inherently noisy nature of military service, often over many years, increases the risk that veterans will develop tinnitus. Weapons and machinery produce extreme noise levels well above the 85-90 decibel threshold that can cause permanent hearing damage from a single exposure.</p>
+       <h3>Did My Military Service Cause My Tinnitus?</h3>
+       <p>The inherently noisy nature of military service, often over many years, increases the risk that veterans will develop tinnitus. Weapons and machinery produce extreme noise levels well above the 85-90 decibel threshold that can cause permanent hearing damage from a single exposure.</p>
 
-        <p>When combined with repetitive exposure, it's easy to see why veterans experience tinnitus at much higher rates than the general public. Those who worked on flight decks or as aircraft crew members face some of the highest risks. Even with protective gear, excessive noise can overwhelm and injure the auditory system.</p>
+       <p>When combined with repetitive exposure, it's easy to see why veterans experience tinnitus at much higher rates than the general public. Those who worked on flight decks or as aircraft crew members face some of the highest risks. Even with protective gear, excessive noise can overwhelm and injure the auditory system.</p>
 
-        <h3>Is Tinnitus a VA Disability Claim?</h3>
-        <p>Tinnitus is currently the most prevalent service-connected disability addressed by the VA. However, it is only ratable at 10 percent as a recurrent condition under VA regulations. To claim disability compensation for tinnitus, you need to provide a current diagnosis from an audiologist or other medical professional.</p>
+       <h3>Is Tinnitus a VA Disability Claim?</h3>
+       <p>Tinnitus is currently the most prevalent service-connected disability addressed by the VA. However, it is only ratable at 10 percent as a recurrent condition under VA regulations. To claim disability compensation for tinnitus, you need to provide a current diagnosis from an audiologist or other medical professional.</p>
 
-        <h3>Service Connection</h3>
-        <p>The VA determines monthly compensation based on service connection – essentially, whether an injury or condition stems from, or was aggravated (made worse) by, your active duty service. Given the delayed onset of hearing loss and tinnitus symptoms, plus the VA's complex rules around documentation, establishing service connection can be a major obstacle for filing disability claims.</p>
+       <h3>Service Connection</h3>
+       <p>The VA determines monthly compensation based on service connection – essentially, whether an injury or condition stems from, or was aggravated (made worse) by, your active duty service. Given the delayed onset of hearing loss and tinnitus symptoms, plus the VA's complex rules around documentation, establishing service connection can be a major obstacle for filing disability claims.</p>
 
-        <h3>How Can I Establish a Service Connection for Tinnitus?</h3>
-        <p>This is where consulting a veterans disability law firm like Veteran Legal can help turn around wrongful denials. Our attorneys thoroughly examine clients' military records, post-service medical history and current lifestyle to build supportive rationales proving service connection.</p>
+       <h3>How Can I Establish a Service Connection for Tinnitus?</h3>
+       <p>This is where consulting a veterans disability law firm like Veteran Legal can help turn around wrongful denials. Our attorneys thoroughly examine clients' military records, post-service medical history and current lifestyle to build supportive rationales proving service connection.</p>
 
-        <p>If needed, they can help obtain expert witness opinions from medical professionals to explain why, for example, a veteran's tinnitus likely stems from working on loud aircraft for a decade in service. When appropriate, they invoke legal precedents requiring the VA to provide veterans the benefit of the doubt when records or recollections have gaps.</p>
+       <p>If needed, they can help obtain expert witness opinions from medical professionals to explain why, for example, a veteran's tinnitus likely stems from working on loud aircraft for a decade in service. When appropriate, they invoke legal precedents requiring the VA to provide veterans the benefit of the doubt when records or recollections have gaps.</p>
 
-        <h3>What Are the Potential Monthly Benefits?</h3>
-        <p>For 2024, a 10 percent rating entitles a veteran with no dependents to $171.23 in monthly tax-free compensation. Veterans with spouses, children or dependent parents may qualify for Special Monthly Compensation, bringing the monthly amount up. These payments increase slightly each year.</p>
+       <h3>What Are the Potential Monthly Benefits?</h3>
+       <p>For 2024, a 10 percent rating entitles a veteran with no dependents to $171.23 in monthly tax-free compensation. Veterans with spouses, children or dependent parents may qualify for Special Monthly Compensation, bringing the monthly amount up. These payments increase slightly each year.</p>
 
-        <p>So while a 10 percent rating may seem low given the real impact of severe and persistent tinnitus, the tax-free supplemental income over many years provides helpful compensation if you're facing service-related difficulties.</p>
+       <p>So while a 10 percent rating may seem low given the real impact of severe and persistent tinnitus, the tax-free supplemental income over many years provides helpful compensation if you're facing service-related difficulties.</p>
 
-        <h3>We Can Help</h3>
-        <p>The VA disability process poses many hurdles for veterans experiencing hearing loss, ringing ears and related conditions stemming from their military service. But with medical records, supporting lay statements, and skillful legal guidance, you can prevail with your tinnitus claim.</p>
+       <h3>We Can Help</h3>
+       <p>The VA disability process poses many hurdles for veterans experiencing hearing loss, ringing ears and related conditions stemming from their military service. But with medical records, supporting lay statements, and skillful legal guidance, you can prevail with your tinnitus claim.</p>
 
-        <p>At Veteran Help Legal, we level the playing field by working with you to gather strong evidence and craft powerful arguments to show service connection for your disabilities. If you've struggled through the process alone, get a free case evaluation from our experienced veteran disability attorneys. Together, we can fight for the monthly assistance you and your family deserve.</p>
-    `
+       <p>At Veteran Help Legal, we level the playing field by working with you to gather strong evidence and craft powerful arguments to show service connection for your disabilities. If you've struggled through the process alone, get a free case evaluation from our experienced veteran disability attorneys. Together, we can fight for the monthly assistance you and your family deserve.</p>
+   `
 },
-        {
-    title: "VA Disability Rating for PTSD: Criteria, Eligibility, and Making a Strong Disability Claim",
-    image: "https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_485414666-1-Medium.jpeg",
-    content: `
-        <h2>VA Disability Rating for PTSD</h2>
-        <img src="https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_485414666-1-Medium.jpeg" alt="PTSD Treatment">
-        
-        <p>Post-traumatic stress disorder (PTSD) is a disabling mental health condition that can develop after exposure to a traumatic event. Among veterans, PTSD is particularly prevalent due to experiencing combat, military sexual trauma, or other trauma while serving. Studies estimate that about 30% of Vietnam War veterans, 12% of Gulf War veterans, and up to 15% of veterans of recent conflicts like those in Iraq and Afghanistan have PTSD.</p>
+{
+title: "VA Disability Rating for PTSD: Criteria, Eligibility, and Making a Strong Disability Claim",
+image: "https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_485414666-1-Medium.jpeg",
+content: `
+       <h2>VA Disability Rating for PTSD</h2>
+       <img src="https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_485414666-1-Medium.jpeg" alt="PTSD Treatment">
+       
+       <p>Post-traumatic stress disorder (PTSD) is a disabling mental health condition that can develop after exposure to a traumatic event. Among veterans, PTSD is particularly prevalent due to experiencing combat, military sexual trauma, or other trauma while serving. Studies estimate that about 30% of Vietnam War veterans, 12% of Gulf War veterans, and up to 15% of veterans of recent conflicts like those in Iraq and Afghanistan have PTSD.</p>
 
-        <p>The symptoms of PTSD can significantly impact your quality of life. If you deal with PTSD, you might experience flashbacks to their trauma, overwhelming emotional or physical reactions, avoidance of trauma reminders, negative moods and thoughts, and feeling constantly alert and unsafe. This makes it hard to maintain relationships, employment, and independence in daily activities. Due to the immense challenges posed by PTSD, it's vital to receive an accurate disability rating from the Department of Veterans Affairs (VA) that recognizes your degree of impairment.</p>
+       <p>The symptoms of PTSD can significantly impact your quality of life. If you deal with PTSD, you might experience flashbacks to their trauma, overwhelming emotional or physical reactions, avoidance of trauma reminders, negative moods and thoughts, and feeling constantly alert and unsafe. This makes it hard to maintain relationships, employment, and independence in daily activities. Due to the immense challenges posed by PTSD, it's vital to receive an accurate disability rating from the Department of Veterans Affairs (VA) that recognizes your degree of impairment.</p>
 
-        <h3>Understanding VA Disability Ratings for PTSD</h3>
-        <p>A VA disability rating for PTSD determines the monthly compensation you can receive for your condition. The rating system ranges from 0% to 100%, with increments of 10%, based on how much PTSD symptoms impact occupational and social functioning. Securing the correct PTSD rating is vital for getting the right ongoing support. However, the claims process can be complex to navigate.</p>
+       <h3>Understanding VA Disability Ratings for PTSD</h3>
+       <p>A VA disability rating for PTSD determines the monthly compensation you can receive for your condition. The rating system ranges from 0% to 100%, with increments of 10%, based on how much PTSD symptoms impact occupational and social functioning. Securing the correct PTSD rating is vital for getting the right ongoing support. However, the claims process can be complex to navigate.</p>
 
-        <p>A key part of rating PTSD claims is the VA Claim exam. Examiners assess veterans for PTSD using strict diagnostic criteria and gauge the severity of symptoms. While essential, the VA Claim exams carry huge weight in determining whether PTSD compensation is approved and what rating percentage you'll receive. As such, you must understand the exam's pivotal role and prepare thoroughly to demonstrate the accuracy of your disability level.</p>
+       <p>A key part of rating PTSD claims is the VA Claim exam. Examiners assess veterans for PTSD using strict diagnostic criteria and gauge the severity of symptoms. While essential, the VA Claim exams carry huge weight in determining whether PTSD compensation is approved and what rating percentage you'll receive. As such, you must understand the exam's pivotal role and prepare thoroughly to demonstrate the accuracy of your disability level.</p>
 
-        <h3>Understanding the General Rating For Mental Health Conditions</h3>
-        <p>The foundation of the VA's rating system for mental disorders like PTSD, outlined in the Schedule for Rating Disabilities, is the degree to which symptoms cause occupational and social impairment. Essentially, higher ratings correspond to greater impairment levels that would make sustaining a job or relationships more difficult. For instance, a 50% PTSD rating requires evidence of considerable impairment, whereas a 100% rating requires total impairment in occupational and social functioning.</p>
+       <h3>Understanding the General Rating For Mental Health Conditions</h3>
+       <p>The foundation of the VA's rating system for mental disorders like PTSD, outlined in the Schedule for Rating Disabilities, is the degree to which symptoms cause occupational and social impairment. Essentially, higher ratings correspond to greater impairment levels that would make sustaining a job or relationships more difficult. For instance, a 50% PTSD rating requires evidence of considerable impairment, whereas a 100% rating requires total impairment in occupational and social functioning.</p>
 
-        <h3>Unmasking the VA PTSD Ratings</h3>
-        <p>VA disability ratings for PTSD range from 0% to 100% in increments of 10% based on meeting outlined symptom criteria that indicate rising levels of impairment. A 0% rating is assigned when your PTSD symptoms are not severe enough to interfere with your work and social life. A 10% rating is for mild or transient symptoms that only result in decreased ability to function during periods of high stress.</p>
+       <h3>Unmasking the VA PTSD Ratings</h3>
+       <p>VA disability ratings for PTSD range from 0% to 100% in increments of 10% based on meeting outlined symptom criteria that indicate rising levels of impairment. A 0% rating is assigned when your PTSD symptoms are not severe enough to interfere with your work and social life. A 10% rating is for mild or transient symptoms that only result in decreased ability to function during periods of high stress.</p>
 
-        <p>A 30% PTSD rating requires evidence of occasional decrease in your ability to work and intermittent inability to perform tasks as well as general satisfaction in your daily life. You must exhibit clearly moderate difficulty in social, work, or school functioning for a 50% PTSD rating. Deficiencies in most areas including work, family relations, judgment, thinking, and mood reflect a 70% rating. Finally, the maximum 100% rating requires total occupational and social impairment.</p>
+       <p>A 30% PTSD rating requires evidence of occasional decrease in your ability to work and intermittent inability to perform tasks as well as general satisfaction in your daily life. You must exhibit clearly moderate difficulty in social, work, or school functioning for a 50% PTSD rating. Deficiencies in most areas including work, family relations, judgment, thinking, and mood reflect a 70% rating. Finally, the maximum 100% rating requires total occupational and social impairment.</p>
 
-        <h3>Making a Strong VA PTSD Claim</h3>
-        <p>Building a strong claim for VA disability compensation for PTSD involves three key steps:</p>
+       <h3>Making a Strong VA PTSD Claim</h3>
+       <p>Building a strong claim for VA disability compensation for PTSD involves three key steps:</p>
 
-        <p>1) Confirming your current and valid PTSD diagnosis from one or more authorized professionals like psychiatrists, psychologists, or clinical social workers,<br>
-        2) Identifying your in-service stressor and providing supporting evidence it occurred,<br>
-        3) Demonstrating a nexus, or causal link, between the in-service stressor and your PTSD.</p>
+       <p>1) Confirming your current and valid PTSD diagnosis from one or more authorized professionals like psychiatrists, psychologists, or clinical social workers,<br>
+       2) Identifying your in-service stressor and providing supporting evidence it occurred,<br>
+       3) Demonstrating a nexus, or causal link, between the in-service stressor and your PTSD.</p>
 
-        <h3>Post-Claim Considerations</h3>
-        <p>Receiving fair VA disability compensation for PTSD relies heavily on medical evidence and opinions verifying symptom severity. Clinical records and letters from mental health providers build a profile of your impairment for accurate ratings. However, the VA Claim Exam offers the most accurate snapshot of your PTSD severity which is important for compensation decisions.</p>
+       <h3>Post-Claim Considerations</h3>
+       <p>Receiving fair VA disability compensation for PTSD relies heavily on medical evidence and opinions verifying symptom severity. Clinical records and letters from mental health providers build a profile of your impairment for accurate ratings. However, the VA Claim Exam offers the most accurate snapshot of your PTSD severity which is important for compensation decisions.</p>
 
-        <h3>Common Incorrect Rating Decisions</h3>
-        <p>Despite strong claims evidence, VA rating decisions might fall short in accurately diagnosing PTSD or assigning disability percentages that reflect how severely your life is affected. The VA commonly denies PTSD claims by disputing the diagnosis itself or claiming conditions existed before your service. When VA agrees you have PTSD, the rating could underestimate actual disability levels because they use a strict measure of the symptoms rather than how you're affected on a daily basis.</p>
+       <h3>Common Incorrect Rating Decisions</h3>
+       <p>Despite strong claims evidence, VA rating decisions might fall short in accurately diagnosing PTSD or assigning disability percentages that reflect how severely your life is affected. The VA commonly denies PTSD claims by disputing the diagnosis itself or claiming conditions existed before your service. When VA agrees you have PTSD, the rating could underestimate actual disability levels because they use a strict measure of the symptoms rather than how you're affected on a daily basis.</p>
 
-        <h3>Conclusion</h3>
-        <p>VA disability ratings for PTSD crucially impact veterans' access to vital financial support and care. However, navigating the claims process poses challenges in conclusively demonstrating a PTSD diagnosis and its disabling effects. By understanding rating criteria, gathering extensive medical evidence of impairment, and adequately conveying symptom severity through VA Claims exams, you and your providers build robust claims for accurate approval decisions.</p>
+       <h3>Conclusion</h3>
+       <p>VA disability ratings for PTSD crucially impact veterans' access to vital financial support and care. However, navigating the claims process poses challenges in conclusively demonstrating a PTSD diagnosis and its disabling effects. By understanding rating criteria, gathering extensive medical evidence of impairment, and adequately conveying symptom severity through VA Claims exams, you and your providers build robust claims for accurate approval decisions.</p>
 
-        <p>Even when facing initial denials or insufficient ratings, persisting through appeals by furnishing additional impairment documentation can ultimately help you attain the compensation you deserve. As PTSD carries immense costs for veterans' livelihoods, the VA must fairly uphold their duty to injured service-members through rating PTSD accurately. With concentrated education, evidence-building, and appeals efforts, you can empower yourself to gain the PTSD disability benefits you deserve.</p>
-    `
+       <p>Even when facing initial denials or insufficient ratings, persisting through appeals by furnishing additional impairment documentation can ultimately help you attain the compensation you deserve. As PTSD carries immense costs for veterans' livelihoods, the VA must fairly uphold their duty to injured service-members through rating PTSD accurately. With concentrated education, evidence-building, and appeals efforts, you can empower yourself to gain the PTSD disability benefits you deserve.</p>
+   `
 },
-       {
-    title: "The Importance of a Diagnosis in VA Claims",
-    image: "https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_585891531-Medium.jpeg",
-    content: `
-        <header class="header">
-            <div class="header-content">
-                <h1>The Importance of a Diagnosis in Resolving VA Claims</h1>
-            </div>
-        </header>
-        <div class="progress-container">
-            <div class="progress-bar"></div>
-        </div>
+{
+title: "The Importance of a Diagnosis in VA Claims",
+    image: "https://raw.githubusercontent.com/joshd1978/va-calculator/main/image.jpeg", // You might want to use a different image
+    image: "https://raw.githubusercontent.com/joshd1978/va-calculator/main/image.jpeg",
+content: `
+       <h2>The Importance of a Diagnosis in VA Claims</h2>
+        <img src="https://raw.githubusercontent.com/joshd1978/va-calculator/main/image.jpeg" alt="VA Diagnosis Importance">
+        <img src="https://raw.githubusercontent.com/joshd1978/va-calculator/main/image.jpeg" alt="VA Diagnosis Importance" class="hero-image">
+       
+       <p>Filing a VA benefits claim can feel overwhelming, but one element is essential for success: a proper medical diagnosis. This isn't just a formality—your diagnosis is the foundation of your claim, proving the existence of a disability and helping the VA connect it to your military service. Without it, your claim may stall or be denied.</p>
 
-        <div class="container">
-            <img src="https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_585891531-Medium.jpeg" alt="Doctor consulting with veteran patient" class="hero-image">
-            
-            <p>Filing a VA benefits claim can feel overwhelming, but one element is essential for success: a proper medical diagnosis. This isn't just a formality—your diagnosis is the foundation of your claim, proving the existence of a disability and helping the VA connect it to your military service. Without it, your claim may stall or be denied.</p>
-            
-            <p>Here's why a diagnosis matters, how it strengthens your claim, and what you can do to set yourself up for success.</p>
-            
-            <div class="divider"></div>
-            
-            <h2>Why a Diagnosis Matters</h2>
-            <p>A diagnosis provides proof that a disability exists, one of the key requirements for establishing service connection in a VA claim. Without it, the VA has no basis to evaluate your condition, let alone determine if it's related to your service.</p>
-            
+        <p>Here's why a diagnosis matters, how it strengthens your claim, and what you can do to set yourself up for success.</p>
+
+        <div class="divider"></div>
+
+       <h3>Why a Diagnosis Matters</h3>
+       <p>A diagnosis provides proof that a disability exists, one of the key requirements for establishing service connection in a VA claim. Without it, the VA has no basis to evaluate your condition, let alone determine if it's related to your service.</p>
+
+        <p>For example, saying you feel depressed or anxious isn't enough. A qualified medical professional must officially diagnose a condition like depression or anxiety and, ideally, provide a medical opinion linking it to your military service. This "nexus" is critical, as it creates the connection between your condition and your time in uniform.</p>
+        <div class="example-box">
             <p>For example, saying you feel depressed or anxious isn't enough. A qualified medical professional must officially diagnose a condition like depression or anxiety and, ideally, provide a medical opinion linking it to your military service. This "nexus" is critical, as it creates the connection between your condition and your time in uniform.</p>
-            
-            <h2>Strengthening Your Claim with Proactive Evidence</h2>
-            <p>Submitting private medical evidence alongside your claim can significantly improve your chances of success. Here's how:</p>
-            
-            <ol>
-                <li>It can accelerate your claim. The VA may accept your private medical evidence without requiring an additional exam, saving you time.</li>
-                <li>It reinforces your case if the VA conducts an exam. A VA examiner is more likely to agree with a diagnosis and nexus opinion already provided by a private medical professional, creating a stronger overall record.</li>
-            </ol>
-            
-            <div class="example-box">
-                <p>For example, if your private doctor diagnoses PTSD or a back injury and connects it to your service, this proactive step strengthens your case from the start and reduces the risk of a VA examiner overlooking key details.</p>
-            </div>
-            
-            <h2>Don't Worry About the "Right" Diagnosis</h2>
-            <h3>What If the Diagnosis Isn't "Right"?</h3>
-            <p>Veterans often worry they need to perfectly label their condition when filing a claim. Fortunately, under <i>Clemons v. Shinseki</i> (2009), the VA is required to consider all conditions reasonably related to the symptoms or evidence provided, even if the diagnosis doesn't perfectly match the one listed on the claim.</p>
-            
-            <p>For example:</p>
-            <ul>
-                <li>A veteran files for PTSD but the evidence shows anxiety or depression. The VA must evaluate these conditions as part of the claim, rather than denying it outright.</li>
-            </ul>
-            
-            <div class="emphasis-text">
-                However, this flexibility doesn't replace the value of a professional diagnosis. Without one, the VA is left to fill in the gaps, and their conclusions may not align with your intentions.
-            </div>
-            
-            <p>Think of a professional diagnosis as guiding the VA in the right direction: the more specific, credible, and well-supported the evidence, the more likely your claim will succeed. <i>Clemons</i> offers a safeguard, but it's no substitute for proactive evidence.</p>
-            
-            <h2>Set Yourself Up for Success</h2>
-            <p>A solid medical diagnosis paired with proactive evidence gathering is the key to a successful VA claim. It ensures your case is grounded in medical fact and gives the VA what it needs to make a fair decision.</p>
-            
-            <p>Take the time to consult with us at <a href="https://veteranhelp.com/contact" class="veteran-help-link">Veteran Help</a> and let us guide you with gathering supporting evidence. These steps will give you the best chance of receiving the benefits you've earned through your service.</p>
         </div>
 
-        <script>
-            window.onscroll = function() {
-                let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-                let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-                let scrolled = (winScroll / height) * 100;
-                document.querySelector(".progress-bar").style.width = scrolled + "%";
-            };
-        </script>
-    `
+       <h3>Strengthening Your Claim with Proactive Evidence</h3>
+       <p>Submitting private medical evidence alongside your claim can significantly improve your chances of success. Here's how:</p>
+
+        <p>It can accelerate your claim. The VA may accept your private medical evidence without requiring an additional exam, saving you time.</p>
+        
+        <p>It reinforces your case if the VA conducts an exam. A VA examiner is more likely to agree with a diagnosis and nexus opinion already provided by a private medical professional, creating a stronger overall record.</p>
+        <ul>
+            <li>It can accelerate your claim. The VA may accept your private medical evidence without requiring an additional exam, saving you time.</li>
+            <li>It reinforces your case if the VA conducts an exam. A VA examiner is more likely to agree with a diagnosis and nexus opinion already provided by a private medical professional, creating a stronger overall record.</li>
+        </ul>
+
+        <p>For example, if your private doctor diagnoses PTSD or a back injury and connects it to your service, this proactive step strengthens your case from the start and reduces the risk of a VA examiner overlooking key details.</p>
+        <div class="example-box">
+            <p>For example, if your private doctor diagnoses PTSD or a back injury and connects it to your service, this proactive step strengthens your case from the start and reduces the risk of a VA examiner overlooking key details.</p>
+        </div>
+
+        <h3>What If the Diagnosis Isn't "Right"?</h3>
+        <p>Veterans often worry they need to perfectly label their condition when filing a claim. Fortunately, under Clemons v. Shinseki (2009), the VA is required to consider all conditions reasonably related to the symptoms or evidence provided, even if the diagnosis doesn't perfectly match the one listed on the claim.</p>
+        <h3>Don't Worry About the "Right" Diagnosis</h3>
+        <p>Veterans often worry they need to perfectly label their condition when filing a claim. Fortunately, under <i>Clemons v. Shinseki</i> (2009), the VA is required to consider all conditions reasonably related to the symptoms or evidence provided, even if the diagnosis doesn't perfectly match the one listed on the claim.</p>
+
+       <p>For example:</p>
+        <p>A veteran files for PTSD but the evidence shows anxiety or depression. The VA must evaluate these conditions as part of the claim, rather than denying it outright.</p>
+        <p>However, this flexibility doesn't replace the value of a professional diagnosis. Without one, the VA is left to fill in the gaps, and their conclusions may not align with your intentions.</p>
+        <ul>
+            <li>A veteran files for PTSD but the evidence shows anxiety or depression. The VA must evaluate these conditions as part of the claim, rather than denying it outright.</li>
+        </ul>
+
+        <p>Think of a professional diagnosis as guiding the VA in the right direction: the more specific, credible, and well-supported the evidence, the more likely your claim will succeed. Clemons offers a safeguard, but it's no substitute for proactive evidence.</p>
+        <div class="emphasis-text">
+            However, this flexibility doesn't replace the value of a professional diagnosis. Without one, the VA is left to fill in the gaps, and their conclusions may not align with your intentions.
+        </div>
+
+        <p>Think of a professional diagnosis as guiding the VA in the right direction: the more specific, credible, and well-supported the evidence, the more likely your claim will succeed. <i>Clemons</i> offers a safeguard, but it's no substitute for proactive evidence.</p>
+
+        <div class="divider"></div>
+
+       <h3>Set Yourself Up for Success</h3>
+       <p>A solid medical diagnosis paired with proactive evidence gathering is the key to a successful VA claim. It ensures your case is grounded in medical fact and gives the VA what it needs to make a fair decision.</p>
+
+        <p>Take the time to consult with us at Veteran Help and let us guide you with gathering supporting evidence. These steps will give you the best chance of receiving the benefits you've earned through your service.</p>
+        <p>Take the time to consult with us at <a href="#" class="veteran-help-link">Veteran Help</a> and let us guide you with gathering supporting evidence. These steps will give you the best chance of receiving the benefits you've earned through your service.</p>
+   `
+
 }
-    ];
+];
 
-    // Initialize articles with fixed preview text
-    const articlesScroll = document.getElementById('articlesScroll');
-    articles.forEach((article, index) => {
-        const preview = document.createElement('div');
-        preview.className = 'article-preview';
-        
-        // Extract the paragraph text without the HTML tags
-        const paragraphText = article.content.match(/<p>(.*?)<\/p>/g)
-            ?.map(p => p.replace(/<\/?p>/g, ''))
-            .join('\n\n');
+// Initialize articles with fixed preview text
+const articlesScroll = document.getElementById('articlesScroll');
+articles.forEach((article, index) => {
+const preview = document.createElement('div');
+preview.className = 'article-preview';
 
-        preview.innerHTML = `
-            <img src="${article.image}" alt="${article.title}" class="preview-image">
-            <div class="preview-text">
-                <h2>${article.title}</h2>
-                <div class="preview-content">
-                    <p>${paragraphText}</p>
-                </div>
-            </div>
-        `;
-        preview.onclick = () => expandArticle(index);
-        articlesScroll.appendChild(preview);
-    });
+// Extract the paragraph text without the HTML tags
+const paragraphText = article.content.match(/<p>(.*?)<\/p>/g)
+?.map(p => p.replace(/<\/?p>/g, ''))
+.join('\n\n');
 
-    function updateReadingProgress() {
-        const article = document.getElementById('expandedArticle');
-        const progressBar = document.getElementById('progressBar');
-        const readingStatus = document.getElementById('readingStatus');
-        
-        const windowHeight = window.innerHeight;
-        const articleHeight = article.scrollHeight - windowHeight;
-        const scrolled = article.scrollTop;
-        
-        const progress = (scrolled / articleHeight) * 100;
-        const clampedProgress = Math.min(100, Math.max(0, progress));
-        
-        progressBar.style.width = `${clampedProgress}%`;
-        readingStatus.textContent = `${Math.round(clampedProgress)}% read`;
-    }
+preview.innerHTML = `
+           <img src="${article.image}" alt="${article.title}" class="preview-image">
+           <div class="preview-text">
+               <h2>${article.title}</h2>
+               <div class="preview-content">
+                   <p>${paragraphText}</p>
+               </div>
+           </div>
+       `;
+preview.onclick = () => expandArticle(index);
+articlesScroll.appendChild(preview);
+});
 
-    function expandArticle(index) {
-        const overlay = document.getElementById('overlay');
-        const expandedArticle = document.getElementById('expandedArticle');
-        const expandedContent = document.getElementById('expandedContent');
-        const progressContainer = document.getElementById('progressContainer');
-        const readingStatus = document.getElementById('readingStatus');
-        
-        expandedContent.innerHTML = articles[index].content;
-        overlay.style.display = 'flex';
-        progressContainer.style.display = 'block';
-        readingStatus.style.display = 'block';
-        
-        setTimeout(() => {
-            expandedArticle.classList.add('active');
-        }, 10);
+function updateReadingProgress() {
+const article = document.getElementById('expandedArticle');
+const progressBar = document.getElementById('progressBar');
+const readingStatus = document.getElementById('readingStatus');
 
-        expandedArticle.addEventListener('scroll', updateReadingProgress);
-        updateReadingProgress();
-    }
+const windowHeight = window.innerHeight;
+const articleHeight = article.scrollHeight - windowHeight;
+const scrolled = article.scrollTop;
 
-    function closeArticle() {
-        const overlay = document.getElementById('overlay');
-        const expandedArticle = document.getElementById('expandedArticle');
-        const progressContainer = document.getElementById('progressContainer');
-        const readingStatus = document.getElementById('readingStatus');
-        
-        expandedArticle.classList.remove('active');
-        progressContainer.style.display = 'none';
-        readingStatus.style.display = 'none';
-        
-        expandedArticle.removeEventListener('scroll', updateReadingProgress);
-        
-        setTimeout(() => {
-            overlay.style.display = 'none';
-        }, 300);
-    }
+const progress = (scrolled / articleHeight) * 100;
+const clampedProgress = Math.min(100, Math.max(0, progress));
 
-    document.getElementById('overlay').addEventListener('click', (e) => {
-        if (e.target.id === 'overlay') {
-            closeArticle();
-        }
-    });
+progressBar.style.width = `${clampedProgress}%`;
+readingStatus.textContent = `${Math.round(clampedProgress)}% read`;
+}
 
-    function scrollArticles(direction) {
-        const container = document.getElementById('articlesScroll');
-        const scrollAmount = 400;
-        
-        if (direction === 'left') {
-            container.scrollLeft -= scrollAmount;
-        } else {
-            container.scrollLeft += scrollAmount;
-        }
-    }
-    </script>
+function expandArticle(index) {
+const overlay = document.getElementById('overlay');
+const expandedArticle = document.getElementById('expandedArticle');
+const expandedContent = document.getElementById('expandedContent');
+const progressContainer = document.getElementById('progressContainer');
+const readingStatus = document.getElementById('readingStatus');
+
+expandedContent.innerHTML = articles[index].content;
+overlay.style.display = 'flex';
+progressContainer.style.display = 'block';
+readingStatus.style.display = 'block';
+
+setTimeout(() => {
+expandedArticle.classList.add('active');
+}, 10);
+
+expandedArticle.addEventListener('scroll', updateReadingProgress);
+updateReadingProgress();
+}
+
+function closeArticle() {
+const overlay = document.getElementById('overlay');
+const expandedArticle = document.getElementById('expandedArticle');
+const progressContainer = document.getElementById('progressContainer');
+const readingStatus = document.getElementById('readingStatus');
+
+expandedArticle.classList.remove('active');
+progressContainer.style.display = 'none';
+readingStatus.style.display = 'none';
+
+expandedArticle.removeEventListener('scroll', updateReadingProgress);
+
+setTimeout(() => {
+overlay.style.display = 'none';
+}, 300);
+}
+
+document.getElementById('overlay').addEventListener('click', (e) => {
+if (e.target.id === 'overlay') {
+closeArticle();
+}
+});
+
+function scrollArticles(direction) {
+const container = document.getElementById('articlesScroll');
+const scrollAmount = 400;
+
+if (direction === 'left') {
+container.scrollLeft -= scrollAmount;
+} else {
+container.scrollLeft += scrollAmount;
+}
+}
+</script>
 </body>
 </html>
