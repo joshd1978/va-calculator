@@ -6,252 +6,217 @@
     <title>VA Articles</title>
     <style>
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
 
-        body {
-            font-family: 'Arial', sans-serif;
-            background: #f5f5f5;
-            min-height: 100vh;
-            padding: 2rem;
-        }
+body {
+    font-family: 'Arial', sans-serif;
+    background: #f5f5f5;
+    min-height: 100vh;
+    padding: 2rem;
+}
 
-        .articles-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            overflow: hidden;
-        }
+/* Existing Articles Grid Styles */
+.articles-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    overflow: hidden;
+}
 
-        .articles-scroll {
-            display: flex;
-            gap: 2rem;
-            padding: 1rem;
-            overflow-x: auto;
-            scroll-behavior: smooth;
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+.articles-scroll {
+    display: flex;
+    gap: 2rem;
+    padding: 1rem;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
 
-        .articles-scroll::-webkit-scrollbar {
-            display: none;
-        }
+.articles-scroll::-webkit-scrollbar {
+    display: none;
+}
 
-        .article-preview {
-            min-width: 350px;
-            max-width: 350px;
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-            height: 500px;
-        }
+.article-preview {
+    min-width: 350px;
+    max-width: 350px;
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    height: 500px;
+}
 
-        .article-preview:hover {
-            transform: translateY(-5px);
-        }
+.article-preview:hover {
+    transform: translateY(-5px);
+}
 
-        .preview-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
+.preview-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
 
-        .preview-text {
-            padding: 1.5rem;
-            height: 250px;
-            position: relative;
-        }
+.preview-text {
+    padding: 1.5rem;
+    height: 250px;
+    position: relative;
+}
 
-        .article-preview h2 {
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
-            color: #333;
-        }
+.article-preview h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
 
-        .article-preview p {
-            font-size: 0.95rem;
-            color: #666;
-            line-height: 1.6;
-        }
+.preview-content p {
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 0;
+    line-height: 1.6;
+    font-size: 0.95rem;
+    color: #666;
+}
 
-        .preview-content p {
-            display: -webkit-box;
-            -webkit-line-clamp: 6;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            position: relative;
-            margin-bottom: 0;
-            line-height: 1.6;
-            font-size: 0.95rem;
-        }
+.preview-content::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    background: linear-gradient(
+        transparent 0%,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.7) 50%,
+        rgba(255, 255, 255, 0.9) 75%,
+        white 100%
+    );
+    pointer-events: none;
+}
 
-        .preview-content::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 120px;
-            background: linear-gradient(
-                transparent 0%,
-                rgba(255, 255, 255, 0) 0%,
-                rgba(255, 255, 255, 0.7) 50%,
-                rgba(255, 255, 255, 0.9) 75%,
-                white 100%
-            );
-            pointer-events: none;
-        }
+/* Expanded Article Styles */
+.expanded-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 2rem;
+}
 
-        .expanded-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            padding: 2rem;
-        }
+.expanded-article {
+    background: white;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    border-radius: 20px;
+    padding: 2rem;
+    overflow-y: auto;
+    position: relative;
+    opacity: 0;
+    transform: scale(0.9);
+    transition: all 0.3s ease;
+}
 
-        .expanded-article {
-            background: white;
-            width: 90%;
-            max-width: 800px;
-            max-height: 90vh;
-            border-radius: 20px;
-            padding: 2rem;
-            overflow-y: auto;
-            position: relative;
-            opacity: 0;
-            transform: scale(0.9);
-            transition: all 0.3s ease;
-        }
+.expanded-article.active {
+    opacity: 1;
+    transform: scale(1);
+}
 
-        .expanded-article img {
-            width: 100%;
-            max-height: 400px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 1.5rem;
-        }
+/* Header Styles for Expanded Article */
+.expanded-article .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    padding: 15px 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
 
-        .expanded-article.active {
-            opacity: 1;
-            transform: scale(1);
-        }
+.expanded-article .header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
 
-        .expanded-article h2 {
-            margin-bottom: 1.5rem;
-            color: #333;
-            font-size: 2rem;
-        }
+.expanded-article .header-content h1 {
+    font-size: 1.8em;
+    color: #2c3e50;
+    line-height: 1.3;
+    padding: 0 20px;
+}
 
-        .expanded-article h3 {
-            margin: 2rem 0 1rem;
-            color: #444;
-            font-size: 1.5rem;
-        }
+/* Progress Bar Styles */
+.expanded-article .progress-container {
+    width: 100%;
+    height: 4px;
+    background: #f0f0f0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1001;
+}
 
-        .expanded-article h4 {
-            margin: 1.5rem 0 0.8rem;
-            color: #555;
-            font-size: 1.2rem;
-        }
+.expanded-article .progress-bar {
+    height: 100%;
+    background: #3498db;
+    width: 0%;
+    transition: width 0.3s ease;
+}
 
-        .expanded-article p {
-            margin-bottom: 1rem;
-            line-height: 1.8;
-            color: #555;
-        }
+/* Content Styles for Expanded Article */
+.expanded-article .container {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
 
-        .close-btn {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #666;
-            padding: 0.5rem;
-            border-radius: 50%;
-            transition: background 0.3s ease;
-        }
+.expanded-article h2 {
+    color: #34495e;
+    margin: 30px 0 20px 0;
+    font-size: 1.8em;
+}
 
-        .close-btn:hover {
-            background: #f0f0f0;
-        }
+.expanded-article h3 {
+    color: #2c3e50;
+    margin: 25px 0 15px 0;
+    font-size: 1.4em;
+}
 
-        .progress-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: #f0f0f0;
-            z-index: 1001;
-            display: none;
-        }
+.expanded-article p {
+    margin-bottom: 20px;
+    font-size: 1.1em;
+    line-height: 1.8;
+    color: #555;
+}
 
-        .progress-bar {
-            height: 100%;
-            background: #4CAF50;
-            width: 0%;
-            transition: width 0.2s ease;
-        }
+.expanded-article .hero-image {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    border-radius: 10px;
+    margin: 20px auto 30px auto;
+    display: block;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
 
-        .reading-status {
-            position: fixed;
-            top: 10px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 8px 15px;
-            border-radius: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            font-size: 14px;
-            display: none;
-            z-index: 1001;
-        }
-
-        .scroll-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .scroll-btn {
-            background: #333;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .scroll-btn:hover {
-            background: #555;
-        }
-
-        @media (max-width: 768px) {
-            .article-preview {
-                min-width: 300px;
-                max-width: 300px;
-            }
-
-            .expanded-article {
-                width: 95%;
-                padding: 1.5rem;
-            }
-          
 .expanded-article .divider {
     height: 2px;
     background: #e0e0e0;
@@ -304,7 +269,8 @@
     transform: scaleX(1);
 }
 
-.expanded-article ol {
+.expanded-article ol,
+.expanded-article ul {
     margin-left: 25px;
     margin-bottom: 20px;
 }
@@ -315,10 +281,107 @@
 
 .expanded-article ul {
     list-style-type: disc;
-    margin-left: 25px;
-    margin-bottom: 20px;
 }
-        }
+
+/* Close Button */
+.close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: background 0.3s ease;
+    z-index: 1002;
+}
+
+.close-btn:hover {
+    background: #f0f0f0;
+}
+
+/* Scroll Buttons */
+.scroll-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.scroll-btn {
+    background: #333;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.scroll-btn:hover {
+    background: #555;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .article-preview {
+        min-width: 300px;
+        max-width: 300px;
+    }
+
+    .expanded-article {
+        width: 95%;
+        padding: 1.5rem;
+    }
+
+    .expanded-article .header-content h1 {
+        font-size: 1.5em;
+        line-height: 1.4;
+    }
+
+    .expanded-article h2 {
+        font-size: 1.5em;
+        margin: 25px 0 15px 0;
+    }
+
+    .expanded-article h3 {
+        font-size: 1.2em;
+    }
+
+    .expanded-article p {
+        font-size: 1em;
+        margin-bottom: 15px;
+    }
+
+    .expanded-article .hero-image {
+        margin: 15px auto 25px auto;
+    }
+
+    .expanded-article .divider {
+        margin: 30px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .expanded-article {
+        padding: 1rem;
+    }
+
+    .expanded-article .header-content h1 {
+        font-size: 1.3em;
+    }
+
+    .expanded-article h2 {
+        font-size: 1.3em;
+    }
+
+    .expanded-article .example-box {
+        padding: 15px;
+    }
+}
     </style>
 </head>
 <body>
@@ -493,48 +556,70 @@
     title: "The Importance of a Diagnosis in VA Claims",
     image: "https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_585891531-Medium.jpeg",
     content: `
-        <p>Filing a VA benefits claim can feel overwhelming, but one element is essential for success: a proper medical diagnosis. This isn't just a formality—your diagnosis is the foundation of your claim, proving the existence of a disability and helping the VA connect it to your military service. Without it, your claim may stall or be denied.</p>
-
-        <p>Here's why a diagnosis matters, how it strengthens your claim, and what you can do to set yourself up for success.</p>
-
-        <div class="divider"></div>
-
-        <h2>Why a Diagnosis Matters</h2>
-        <p>A diagnosis provides proof that a disability exists, one of the key requirements for establishing service connection in a VA claim. Without it, the VA has no basis to evaluate your condition, let alone determine if it's related to your service.</p>
-
-        <p>For example, saying you feel depressed or anxious isn't enough. A qualified medical professional must officially diagnose a condition like depression or anxiety and, ideally, provide a medical opinion linking it to your military service. This "nexus" is critical, as it creates the connection between your condition and your time in uniform.</p>
-
-        <h2>Strengthening Your Claim with Proactive Evidence</h2>
-        <p>Submitting private medical evidence alongside your claim can significantly improve your chances of success. Here's how:</p>
-
-        <ol>
-            <li>It can accelerate your claim. The VA may accept your private medical evidence without requiring an additional exam, saving you time.</li>
-            <li>It reinforces your case if the VA conducts an exam. A VA examiner is more likely to agree with a diagnosis and nexus opinion already provided by a private medical professional, creating a stronger overall record.</li>
-        </ol>
-
-        <div class="example-box">
-            <p>For example, if your private doctor diagnoses PTSD or a back injury and connects it to your service, this proactive step strengthens your case from the start and reduces the risk of a VA examiner overlooking key details.</p>
+        <header class="header">
+            <div class="header-content">
+                <h1>The Importance of a Diagnosis in Resolving VA Claims</h1>
+            </div>
+        </header>
+        <div class="progress-container">
+            <div class="progress-bar"></div>
         </div>
 
-        <h2>Don't Worry About the "Right" Diagnosis</h2>
-        <h3>What If the Diagnosis Isn't "Right"?</h3>
-        <p>Veterans often worry they need to perfectly label their condition when filing a claim. Fortunately, under <i>Clemons v. Shinseki</i> (2009), the VA is required to consider all conditions reasonably related to the symptoms or evidence provided, even if the diagnosis doesn't perfectly match the one listed on the claim.</p>
-
-        <p>For example:</p>
-        <ul>
-            <li>A veteran files for PTSD but the evidence shows anxiety or depression. The VA must evaluate these conditions as part of the claim, rather than denying it outright.</li>
-        </ul>
-
-        <div class="emphasis-text">
-            However, this flexibility doesn't replace the value of a professional diagnosis. Without one, the VA is left to fill in the gaps, and their conclusions may not align with your intentions.
+        <div class="container">
+            <img src="https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_585891531-Medium.jpeg" alt="Doctor consulting with veteran patient" class="hero-image">
+            
+            <p>Filing a VA benefits claim can feel overwhelming, but one element is essential for success: a proper medical diagnosis. This isn't just a formality—your diagnosis is the foundation of your claim, proving the existence of a disability and helping the VA connect it to your military service. Without it, your claim may stall or be denied.</p>
+            
+            <p>Here's why a diagnosis matters, how it strengthens your claim, and what you can do to set yourself up for success.</p>
+            
+            <div class="divider"></div>
+            
+            <h2>Why a Diagnosis Matters</h2>
+            <p>A diagnosis provides proof that a disability exists, one of the key requirements for establishing service connection in a VA claim. Without it, the VA has no basis to evaluate your condition, let alone determine if it's related to your service.</p>
+            
+            <p>For example, saying you feel depressed or anxious isn't enough. A qualified medical professional must officially diagnose a condition like depression or anxiety and, ideally, provide a medical opinion linking it to your military service. This "nexus" is critical, as it creates the connection between your condition and your time in uniform.</p>
+            
+            <h2>Strengthening Your Claim with Proactive Evidence</h2>
+            <p>Submitting private medical evidence alongside your claim can significantly improve your chances of success. Here's how:</p>
+            
+            <ol>
+                <li>It can accelerate your claim. The VA may accept your private medical evidence without requiring an additional exam, saving you time.</li>
+                <li>It reinforces your case if the VA conducts an exam. A VA examiner is more likely to agree with a diagnosis and nexus opinion already provided by a private medical professional, creating a stronger overall record.</li>
+            </ol>
+            
+            <div class="example-box">
+                <p>For example, if your private doctor diagnoses PTSD or a back injury and connects it to your service, this proactive step strengthens your case from the start and reduces the risk of a VA examiner overlooking key details.</p>
+            </div>
+            
+            <h2>Don't Worry About the "Right" Diagnosis</h2>
+            <h3>What If the Diagnosis Isn't "Right"?</h3>
+            <p>Veterans often worry they need to perfectly label their condition when filing a claim. Fortunately, under <i>Clemons v. Shinseki</i> (2009), the VA is required to consider all conditions reasonably related to the symptoms or evidence provided, even if the diagnosis doesn't perfectly match the one listed on the claim.</p>
+            
+            <p>For example:</p>
+            <ul>
+                <li>A veteran files for PTSD but the evidence shows anxiety or depression. The VA must evaluate these conditions as part of the claim, rather than denying it outright.</li>
+            </ul>
+            
+            <div class="emphasis-text">
+                However, this flexibility doesn't replace the value of a professional diagnosis. Without one, the VA is left to fill in the gaps, and their conclusions may not align with your intentions.
+            </div>
+            
+            <p>Think of a professional diagnosis as guiding the VA in the right direction: the more specific, credible, and well-supported the evidence, the more likely your claim will succeed. <i>Clemons</i> offers a safeguard, but it's no substitute for proactive evidence.</p>
+            
+            <h2>Set Yourself Up for Success</h2>
+            <p>A solid medical diagnosis paired with proactive evidence gathering is the key to a successful VA claim. It ensures your case is grounded in medical fact and gives the VA what it needs to make a fair decision.</p>
+            
+            <p>Take the time to consult with us at <a href="https://veteranhelp.com/contact" class="veteran-help-link">Veteran Help</a> and let us guide you with gathering supporting evidence. These steps will give you the best chance of receiving the benefits you've earned through your service.</p>
         </div>
 
-        <p>Think of a professional diagnosis as guiding the VA in the right direction: the more specific, credible, and well-supported the evidence, the more likely your claim will succeed. <i>Clemons</i> offers a safeguard, but it's no substitute for proactive evidence.</p>
-
-        <h2>Set Yourself Up for Success</h2>
-        <p>A solid medical diagnosis paired with proactive evidence gathering is the key to a successful VA claim. It ensures your case is grounded in medical fact and gives the VA what it needs to make a fair decision.</p>
-
-        <p>Take the time to consult with us at <a href="https://veteranhelp.com/contact" class="veteran-help-link">Veteran Help</a> and let us guide you with gathering supporting evidence. These steps will give you the best chance of receiving the benefits you've earned through your service.</p>
+        <script>
+            window.onscroll = function() {
+                let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                let scrolled = (winScroll / height) * 100;
+                document.querySelector(".progress-bar").style.width = scrolled + "%";
+            };
+        </script>
     `
 }
     ];
