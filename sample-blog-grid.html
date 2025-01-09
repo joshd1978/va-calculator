@@ -147,6 +147,30 @@
             transform: scale(1);
         }
 
+        .expanded-article h2 {
+            margin-bottom: 1.5rem;
+            color: #333;
+            font-size: 2rem;
+        }
+
+        .expanded-article h3 {
+            margin: 2rem 0 1rem;
+            color: #444;
+            font-size: 1.5rem;
+        }
+
+        .expanded-article h4 {
+            margin: 1.5rem 0 0.8rem;
+            color: #555;
+            font-size: 1.2rem;
+        }
+
+        .expanded-article p {
+            margin-bottom: 1rem;
+            line-height: 1.8;
+            color: #555;
+        }
+
         .close-btn {
             position: absolute;
             top: 1rem;
@@ -254,142 +278,188 @@
     </div>
 
     <script>
-        const articles = [
-            {
-                title: "How Disability Ratings Determine Compensation",
-                image: "https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_585891531-Medium.jpeg",
-                content: `
-                    <h2>How Disability Ratings Determine Compensation</h2>
-                    <img src="https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_585891531-Medium.jpeg" alt="VA Disability Rating Discussion">
-                    <p>The amount of monthly VA disability compensation you could receive depends your disability rating, ranging from 0% to 100% in chunks of 10%. A rating is assigned based on the severity of each diagnosed condition and its impact on your occupational and social functioning. That means the harder your disability makes it for you to work, then the higher your rating will probably be.</p>
-                    <p>Understanding how VA disability ratings work is crucial for veterans seeking compensation. The rating system is designed to reflect the degree to which a service-connected disability impacts a veteran's ability to work and maintain quality of life.</p>
-                `
-            },
-            {
-                title: "Tinnitus and VA Disability Claims",
-                image: "https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_431568726-Medium.jpeg",
-                content: `
-                    <h2>Tinnitus and VA Disability Claims</h2>
-                    <img src="https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_431568726-Medium.jpeg" alt="Tinnitus Treatment">
-                    <p>Tinnitus, or ringing in the ears, is an unfortunately common condition among veterans who faced frequent and prolonged exposure to loud noises during their military service. The Department of Veterans Affairs (VA) offers monthly disability benefits for tinnitus, recognizing it as a significant service-connected disability that affects many veterans.</p>
-                    <p>Veterans experiencing tinnitus may qualify for VA disability compensation if they can establish a service connection. This typically involves demonstrating that the condition developed during or was caused by military service.</p>
-                `
-            },
-            {
-                title: "VA Disability Rating for PTSD",
-                image: "https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_485414666-1-Medium.jpeg",
-                content: `
-                    <h2>VA Disability Rating for PTSD: Criteria, Eligibility, and Making a Strong Disability Claim</h2>
-                    <img src="https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_485414666-1-Medium.jpeg" alt="PTSD Treatment">
-                    <p>Post-traumatic stress disorder (PTSD) is a disabling mental health condition that can develop after exposure to a traumatic event. Among veterans, PTSD is particularly prevalent due to experiencing combat, military sexual trauma, or other trauma while serving. Studies estimate that about 30% of Vietnam War veterans, 12% of Gulf War veterans, and up to 15% of veterans of recent conflicts like those in Iraq and Afghanistan have PTSD.</p>
-                    <p>The symptoms of PTSD can significantly impact your quality of life. If you deal with PTSD, you might experience flashbacks to their trauma, overwhelming emotional or physical reactions, avoidance of trauma reminders, negative moods and thoughts, and feeling constantly alert and unsafe.</p>
-                `
-            },
-            {
-                title: "The Importance of a Diagnosis in Resolving VA Claims",
-                image: "https://raw.githubusercontent.com/joshd1978/va-calculator/main/image.jpeg",
-                content: `
-                    <h2>The Importance of a Diagnosis in Resolving VA Claims</h2>
-                    <img src="https://raw.githubusercontent.com/joshd1978/va-calculator/main/image.jpeg" alt="VA Claims Process">
-                    <p>Filing a VA benefits claim can feel overwhelming, but one element is essential for success: a proper medical diagnosis. This isn't just a formality—your diagnosis is the foundation of your claim, proving the existence of a disability and helping the VA connect it to your military service. Without it, your claim may stall or be denied.</p>
-                    <p>A clear, documented diagnosis from a qualified healthcare provider is crucial evidence in your VA claim. It helps establish both the existence and severity of your condition, which are key factors in determining your disability rating and compensation.</p>
-                `
-            }
-        ];
+    const articles = [
+        {
+            title: "How Disability Ratings Determine Compensation",
+            image: "https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_585891531-Medium.jpeg",
+            content: `
+                <h2>How Disability Ratings Determine Compensation</h2>
+                <img src="https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_585891531-Medium.jpeg" alt="VA Disability Rating Discussion">
+                
+                <p>The amount of monthly VA disability compensation you could receive depends your disability rating, ranging from 0% to 100% in chunks of 10%.</p>
 
-        // Initialize articles with fixed preview text
-        const articlesScroll = document.getElementById('articlesScroll');
-        articles.forEach((article, index) => {
-            const preview = document.createElement('div');
-            preview.className = 'article-preview';
-            
-            // Extract the paragraph text without the HTML tags
-            const paragraphText = article.content.match(/<p>(.*?)<\/p>/g)
-                ?.map(p => p.replace(/<\/?p>/g, ''))
-                .join('\n\n');
+                <p>A rating is assigned based on the severity of each diagnosed condition and its impact on your occupational and social functioning. That means the harder your disability makes it for you to work, then the higher your rating will probably be. Higher ratings mean you'll get a larger amount of monthly pay. If you have multiple service-connected conditions, these will also have those individual ratings combined into a single rating.</p>
 
-            preview.innerHTML = `
-                <img src="${article.image}" alt="${article.title}" class="preview-image">
-                <div class="preview-text">
-                    <h2>${article.title}</h2>
-                    <div class="preview-content">
-                        <p>${paragraphText}</p>
-                    </div>
+                <p>You may also receive additional compensation for any dependents, such as an eligible spouse, any children, and/or dependent parent(s). Additional compensation amounts are provided for those dependents.</p>
+
+                <h3>Overview of the New 2024 VA Disability Rates</h3>
+                <p>On December 1, 2023, updated disability rates will take effect across rating percentages for veterans with and without eligible dependents. For example, a single veteran with a combined 60% rating can expect their monthly payment to increase from $1319.65 to $1,361.88 under the new 2024 rates. Similarly, a 100% disabled veteran with a spouse and child will see their monthly payment go up to $4,089.87.</p>
+
+                <h3>2024 VA Disability Rates</h3>
+                <p>Effective Date: December 1, 2023</p>
+
+                <p>Note: Veterans with a 10% to 20% disability rating do not receive additional compensation for having a spouse, dependent child, or dependent parent.</p>
+
+                <h4>Basic Disability Rates:</h4>
+                <p>10%: $171.23<br>
+                20%: $338.49</p>
+
+                <h3>How Does VA Disability Compensation Work?</h3>
+                <p>VA disability compensation is a tax-free monetary benefit paid to veterans who have disabilities resulting from diseases or injuries received or made worse during active military service. This program is separate from military retirement pay and is not subject to federal or state taxes.</p>
+
+                <p>Eligibility for disability compensation depends on whether you receive an official rating decision of at least 10% from the VA. Each diagnosed condition linked to your time in service is assigned a rating between 0% and 100% based on the VASRD disability rating schedule.</p>
+
+                <h3>Conclusion</h3>
+                <p>The U.S Department of Veterans Affairs disability compensation program delivers valuable financial support to former military members disabled during active service. Updated rating decisions in 2023 will incorporate a 3.2% COLA increase starting December 1st, 2023 to counter consumer inflation. Veterans should review their future monthly amounts and feel confident benefit rates will sustain real value thanks to automatic COLA indexation against rising costs.</p>
+            `
+        },
+        {
+            title: "Tinnitus and VA Disability Claims",
+            image: "https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_431568726-Medium.jpeg",
+            content: `
+                <h2>Tinnitus and VA Disability Claims</h2>
+                <img src="https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_431568726-Medium.jpeg" alt="Tinnitus Treatment">
+                
+                <p>Tinnitus, or ringing in the ears, is an unfortunately common condition among veterans who faced frequent and prolonged exposure to loud noises during their military service. The Department of Veterans Affairs (VA) offers monthly disability benefits for tinnitus. However, many veterans find their claims denied even when medical records clearly show a connection between their tinnitus and noise exposure during their service.</p>
+
+                <h3>What is Tinnitus?</h3>
+                <p>Tinnitus is the perception of noise or ringing in the ears. Different people experience it in different ways – you might hear it in one ear or both, as a high-pitched ringing, buzzing, roaring, clicking, hissing or even as musical tones. The sounds can be sporadic or continuous. Sometimes, external noises make tinnitus temporarily quieter or louder.</p>
+
+                <p>While tinnitus sometimes stems from age-related hearing loss or cerumen (ear wax) build-up, one of the most common causes is excessive noise exposure. Loud concerts, machinery operation, or gunfire during military service can all contribute to or trigger tinnitus.</p>
+
+                <h3>Did My Military Service Cause My Tinnitus?</h3>
+                <p>The inherently noisy nature of military service, often over many years, increases the risk that veterans will develop tinnitus. Weapons and machinery produce extreme noise levels well above the 85-90 decibel threshold that can cause permanent hearing damage from a single exposure.</p>
+
+                <h3>Is Tinnitus a VA Disability Claim?</h3>
+                <p>Tinnitus is currently the most prevalent service-connected disability addressed by the VA. However, it is only ratable at 10 percent as a recurrent condition under VA regulations. To claim disability compensation for tinnitus, you need to provide a current diagnosis from an audiologist or other medical professional.</p>
+
+                <h3>What Are the Potential Monthly Benefits?</h3>
+                <p>For 2024, a 10 percent rating entitles a veteran with no dependents to $171.23 in monthly tax-free compensation. Veterans with spouses, children or dependent parents may qualify for Special Monthly Compensation, bringing the monthly amount up. These payments increase slightly each year.</p>
+
+                <h3>We Can Help</h3>
+                <p>The VA disability process poses many hurdles for veterans experiencing hearing loss, ringing ears and related conditions stemming from their military service. But with medical records, supporting lay statements, and skillful legal guidance, you can prevail with your tinnitus claim.</p>
+            `
+        },
+        {
+            title: "VA Disability Rating for PTSD",
+            image: "https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_485414666-1-Medium.jpeg",
+            content: `
+                <h2>VA Disability Rating for PTSD</h2>
+                <img src="https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_485414666-1-Medium.jpeg" alt="PTSD Treatment">
+                
+                <p>Post-traumatic stress disorder (PTSD) is a disabling mental health condition that can develop after exposure to a traumatic event. Among veterans, PTSD is particularly prevalent due to experiencing combat, military sexual trauma, or other trauma while serving. Studies estimate that about 30% of Vietnam War veterans, 12% of Gulf War veterans, and up to 15% of veterans of recent conflicts like those in Iraq and Afghanistan have PTSD.</p>
+
+                <h3>Understanding PTSD Ratings</h3>
+                <p>The symptoms of PTSD can significantly impact your quality of life. If you deal with PTSD, you might experience flashbacks to their trauma, overwhelming emotional or physical reactions, avoidance of trauma reminders, negative moods and thoughts, and feeling constantly alert and unsafe.</p>
+
+                <h3>General Rating For Mental Health Conditions</h3>
+                <p>The foundation of the VA's rating system for mental disorders like PTSD, outlined in the Schedule for Rating Disabilities, is the degree to which symptoms cause occupational and social impairment. Essentially, higher ratings correspond to greater impairment levels that would make sustaining a job or relationships more difficult.</p>
+
+                <h3>Making a Strong VA PTSD Claim</h3>
+                <p>Building a strong claim for VA disability compensation for PTSD involves three key steps:</p>
+                <p>1) Confirming your current and valid PTSD diagnosis from authorized professionals<br>
+                2) Identifying your in-service stressor and providing supporting evidence<br>
+                3) Demonstrating a causal link between the stressor and your PTSD</p>
+
+                <h3>Conclusion</h3>
+                <p>VA disability ratings for PTSD crucially impact veterans' access to vital financial support and care. However, navigating the claims process poses challenges in conclusively demonstrating a PTSD diagnosis and its disabling effects. By understanding rating criteria and gathering extensive medical evidence, you can build robust claims for accurate approval decisions.</p>
+            `
+        }
+    ];
+
+    // Initialize articles with fixed preview text
+    const articlesScroll = document.getElementById('articlesScroll');
+    articles.forEach((article, index) => {
+        const preview = document.createElement('div');
+        preview.className = 'article-preview';
+        
+        // Extract the paragraph text without the HTML tags
+        const paragraphText = article.content.match(/<p>(.*?)<\/p>/g)
+            ?.map(p => p.replace(/<\/?p>/g, ''))
+            .join('\n\n');
+
+        preview.innerHTML = `
+            <img src="${article.image}" alt="${article.title}" class="preview-image">
+            <div class="preview-text">
+                <h2>${article.title}</h2>
+                <div class="preview-content">
+                    <p>${paragraphText}</p>
                 </div>
-            `;
-            preview.onclick = () => expandArticle(index);
-            articlesScroll.appendChild(preview);
-        });
+            </div>
+        `;
+        preview.onclick = () => expandArticle(index);
+        articlesScroll.appendChild(preview);
+    });
 
-        function updateReadingProgress() {
-            const article = document.getElementById('expandedArticle');
-            const progressBar = document.getElementById('progressBar');
-            const readingStatus = document.getElementById('readingStatus');
-            
-            const windowHeight = window.innerHeight;
-            const articleHeight = article.scrollHeight - windowHeight;
-            const scrolled = article.scrollTop;
-            
-            const progress = (scrolled / articleHeight) * 100;
-            const clampedProgress = Math.min(100, Math.max(0, progress));
-            
-            progressBar.style.width = `${clampedProgress}%`;
-            readingStatus.textContent = `${Math.round(clampedProgress)}% read`;
+    function updateReadingProgress() {
+        const article = document.getElementById('expandedArticle');
+        const progressBar = document.getElementById('progressBar');
+        const readingStatus = document.getElementById('readingStatus');
+        
+        const windowHeight = window.innerHeight;
+        const articleHeight = article.scrollHeight - windowHeight;
+        const scrolled = article.scrollTop;
+        
+        const progress = (scrolled / articleHeight) * 100;
+        const clampedProgress = Math.min(100, Math.max(0, progress));
+        
+        progressBar.style.width = `${clampedProgress}%`;
+        readingStatus.textContent = `${Math.round(clampedProgress)}% read`;
+    }
+
+    function expandArticle(index) {
+        const overlay = document.getElementById('overlay');
+        const expandedArticle = document.getElementById('expandedArticle');
+        const expandedContent = document.getElementById('expandedContent');
+        const progressContainer = document.getElementById('progressContainer');
+        const readingStatus = document.getElementById('readingStatus');
+        
+        expandedContent.innerHTML = articles[index].content;
+        overlay.style.display = 'flex';
+        progressContainer.style.display = 'block';
+        readingStatus.style.display = 'block';
+        
+        setTimeout(() => {
+            expandedArticle.classList.add('active');
+        }, 10);
+
+        expandedArticle.addEventListener('scroll', updateReadingProgress);
+        updateReadingProgress();
+    }
+
+    function closeArticle() {
+        const overlay = document.getElementById('overlay');
+        const expandedArticle = document.getElementById('expandedArticle');
+        const progressContainer = document.getElementById('progressContainer');
+        const readingStatus = document.getElementById('readingStatus');
+        
+        expandedArticle.classList.remove('active');
+        progressContainer.style.display = 'none';
+        readingStatus.style.display = 'none';
+        
+        expandedArticle.removeEventListener('scroll', updateReadingProgress);
+        
+        setTimeout(() => {
+            overlay.style.display = 'none';
+        }, 300);
+    }
+
+    document.getElementById('overlay').addEventListener('click', (e) => {
+        if (e.target.id === 'overlay') {
+            closeArticle();
         }
+    });
 
-        function expandArticle(index) {
-            const overlay = document.getElementById('overlay');
-            const expandedArticle = document.getElementById('expandedArticle');
-            const expandedContent = document.getElementById('expandedContent');
-            const progressContainer = document.getElementById('progressContainer');
-            const readingStatus = document.getElementById('readingStatus');
-            
-            expandedContent.innerHTML = articles[index].content;
-            overlay.style.display = 'flex';
-            progressContainer.style.display = 'block';
-            readingStatus.style.display = 'block';
-            
-            setTimeout(() => {
-                expandedArticle.classList.add('active');
-            }, 10);
-
-            expandedArticle.addEventListener('scroll', updateReadingProgress);
-            updateReadingProgress();
+    function scrollArticles(direction) {
+        const container = document.getElementById('articlesScroll');
+        const scrollAmount = 400;
+        
+        if (direction === 'left') {
+            container.scrollLeft -= scrollAmount;
+        } else {
+            container.scrollLeft += scrollAmount;
         }
-
-        function closeArticle() {
-            const overlay = document.getElementById('overlay');
-            const expandedArticle = document.getElementById('expandedArticle');
-            const progressContainer = document.getElementById('progressContainer');
-            const readingStatus = document.getElementById('readingStatus');
-            
-            expandedArticle.classList.remove('active');
-            progressContainer.style.display = 'none';
-            readingStatus.style.display = 'none';
-            
-            expandedArticle.removeEventListener('scroll', updateReadingProgress);
-            
-            setTimeout(() => {
-                overlay.style.display = 'none';
-            }, 300);
-        }
-
-        document.getElementById('overlay').addEventListener('click', (e) => {
-            if (e.target.id === 'overlay') {
-                closeArticle();
-            }
-        });
-
-        function scrollArticles(direction) {
-            const container = document.getElementById('articlesScroll');
-            const scrollAmount = 400;
-            
-            if (direction === 'left') {
-                container.scrollLeft -= scrollAmount;
-            } else {
-                container.scrollLeft += scrollAmount;
-            }
-        }
+    }
     </script>
 </body>
 </html>
