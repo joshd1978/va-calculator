@@ -147,22 +147,6 @@
             transform: scale(1);
         }
 
-        .expanded-article h2 {
-            margin-bottom: 1.5rem;
-            color: #333;
-        }
-
-        .expanded-article h3 {
-            margin: 2rem 0 1rem;
-            color: #444;
-        }
-
-        .expanded-article p {
-            margin-bottom: 1rem;
-            line-height: 1.8;
-            color: #555;
-        }
-
         .close-btn {
             position: absolute;
             top: 1rem;
@@ -246,3 +230,166 @@
         }
     </style>
 </head>
+<body>
+    <div class="progress-container" id="progressContainer">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="reading-status" id="readingStatus">0% read</div>
+
+    <div class="articles-container">
+        <div class="articles-scroll" id="articlesScroll">
+            <!-- Articles will be dynamically added here -->
+        </div>
+        <div class="scroll-buttons">
+            <button class="scroll-btn" onclick="scrollArticles('left')">←</button>
+            <button class="scroll-btn" onclick="scrollArticles('right')">→</button>
+        </div>
+    </div>
+
+    <div class="expanded-overlay" id="overlay">
+        <div class="expanded-article" id="expandedArticle">
+            <button class="close-btn" onclick="closeArticle()">×</button>
+            <div id="expandedContent"></div>
+        </div>
+    </div>
+
+    <script>
+        const articles = [
+            {
+                title: "How Disability Ratings Determine Compensation",
+                image: "https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_585891531-Medium.jpeg",
+                content: `
+                    <h2>How Disability Ratings Determine Compensation</h2>
+                    <img src="https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_585891531-Medium.jpeg" alt="VA Disability Rating Discussion">
+                    <p>The amount of monthly VA disability compensation you could receive depends your disability rating, ranging from 0% to 100% in chunks of 10%. A rating is assigned based on the severity of each diagnosed condition and its impact on your occupational and social functioning. That means the harder your disability makes it for you to work, then the higher your rating will probably be.</p>
+                    <p>Understanding how VA disability ratings work is crucial for veterans seeking compensation. The rating system is designed to reflect the degree to which a service-connected disability impacts a veteran's ability to work and maintain quality of life.</p>
+                `
+            },
+            {
+                title: "Tinnitus and VA Disability Claims",
+                image: "https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_431568726-Medium.jpeg",
+                content: `
+                    <h2>Tinnitus and VA Disability Claims</h2>
+                    <img src="https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_431568726-Medium.jpeg" alt="Tinnitus Treatment">
+                    <p>Tinnitus, or ringing in the ears, is an unfortunately common condition among veterans who faced frequent and prolonged exposure to loud noises during their military service. The Department of Veterans Affairs (VA) offers monthly disability benefits for tinnitus, recognizing it as a significant service-connected disability that affects many veterans.</p>
+                    <p>Veterans experiencing tinnitus may qualify for VA disability compensation if they can establish a service connection. This typically involves demonstrating that the condition developed during or was caused by military service.</p>
+                `
+            },
+            {
+                title: "VA Disability Rating for PTSD",
+                image: "https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_485414666-1-Medium.jpeg",
+                content: `
+                    <h2>VA Disability Rating for PTSD: Criteria, Eligibility, and Making a Strong Disability Claim</h2>
+                    <img src="https://raw.githubusercontent.com/joshd1978/va-calculator/main/AdobeStock_485414666-1-Medium.jpeg" alt="PTSD Treatment">
+                    <p>Post-traumatic stress disorder (PTSD) is a disabling mental health condition that can develop after exposure to a traumatic event. Among veterans, PTSD is particularly prevalent due to experiencing combat, military sexual trauma, or other trauma while serving. Studies estimate that about 30% of Vietnam War veterans, 12% of Gulf War veterans, and up to 15% of veterans of recent conflicts like those in Iraq and Afghanistan have PTSD.</p>
+                    <p>The symptoms of PTSD can significantly impact your quality of life. If you deal with PTSD, you might experience flashbacks to their trauma, overwhelming emotional or physical reactions, avoidance of trauma reminders, negative moods and thoughts, and feeling constantly alert and unsafe.</p>
+                `
+            },
+            {
+                title: "The Importance of a Diagnosis in Resolving VA Claims",
+                image: "https://raw.githubusercontent.com/joshd1978/va-calculator/main/image.jpeg",
+                content: `
+                    <h2>The Importance of a Diagnosis in Resolving VA Claims</h2>
+                    <img src="https://raw.githubusercontent.com/joshd1978/va-calculator/main/image.jpeg" alt="VA Claims Process">
+                    <p>Filing a VA benefits claim can feel overwhelming, but one element is essential for success: a proper medical diagnosis. This isn't just a formality—your diagnosis is the foundation of your claim, proving the existence of a disability and helping the VA connect it to your military service. Without it, your claim may stall or be denied.</p>
+                    <p>A clear, documented diagnosis from a qualified healthcare provider is crucial evidence in your VA claim. It helps establish both the existence and severity of your condition, which are key factors in determining your disability rating and compensation.</p>
+                `
+            }
+        ];
+
+        // Initialize articles with fixed preview text
+        const articlesScroll = document.getElementById('articlesScroll');
+        articles.forEach((article, index) => {
+            const preview = document.createElement('div');
+            preview.className = 'article-preview';
+            
+            // Extract the paragraph text without the HTML tags
+            const paragraphText = article.content.match(/<p>(.*?)<\/p>/g)
+                ?.map(p => p.replace(/<\/?p>/g, ''))
+                .join('\n\n');
+
+            preview.innerHTML = `
+                <img src="${article.image}" alt="${article.title}" class="preview-image">
+                <div class="preview-text">
+                    <h2>${article.title}</h2>
+                    <div class="preview-content">
+                        <p>${paragraphText}</p>
+                    </div>
+                </div>
+            `;
+            preview.onclick = () => expandArticle(index);
+            articlesScroll.appendChild(preview);
+        });
+
+        function updateReadingProgress() {
+            const article = document.getElementById('expandedArticle');
+            const progressBar = document.getElementById('progressBar');
+            const readingStatus = document.getElementById('readingStatus');
+            
+            const windowHeight = window.innerHeight;
+            const articleHeight = article.scrollHeight - windowHeight;
+            const scrolled = article.scrollTop;
+            
+            const progress = (scrolled / articleHeight) * 100;
+            const clampedProgress = Math.min(100, Math.max(0, progress));
+            
+            progressBar.style.width = `${clampedProgress}%`;
+            readingStatus.textContent = `${Math.round(clampedProgress)}% read`;
+        }
+
+        function expandArticle(index) {
+            const overlay = document.getElementById('overlay');
+            const expandedArticle = document.getElementById('expandedArticle');
+            const expandedContent = document.getElementById('expandedContent');
+            const progressContainer = document.getElementById('progressContainer');
+            const readingStatus = document.getElementById('readingStatus');
+            
+            expandedContent.innerHTML = articles[index].content;
+            overlay.style.display = 'flex';
+            progressContainer.style.display = 'block';
+            readingStatus.style.display = 'block';
+            
+            setTimeout(() => {
+                expandedArticle.classList.add('active');
+            }, 10);
+
+            expandedArticle.addEventListener('scroll', updateReadingProgress);
+            updateReadingProgress();
+        }
+
+        function closeArticle() {
+            const overlay = document.getElementById('overlay');
+            const expandedArticle = document.getElementById('expandedArticle');
+            const progressContainer = document.getElementById('progressContainer');
+            const readingStatus = document.getElementById('readingStatus');
+            
+            expandedArticle.classList.remove('active');
+            progressContainer.style.display = 'none';
+            readingStatus.style.display = 'none';
+            
+            expandedArticle.removeEventListener('scroll', updateReadingProgress);
+            
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 300);
+        }
+
+        document.getElementById('overlay').addEventListener('click', (e) => {
+            if (e.target.id === 'overlay') {
+                closeArticle();
+            }
+        });
+
+        function scrollArticles(direction) {
+            const container = document.getElementById('articlesScroll');
+            const scrollAmount = 400;
+            
+            if (direction === 'left') {
+                container.scrollLeft -= scrollAmount;
+            } else {
+                container.scrollLeft += scrollAmount;
+            }
+        }
+    </script>
+</body>
+</html>
